@@ -1,0 +1,28 @@
+##########
+# Unity
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Ll]ogs/
+
+##########
+# Visual Studio / MonoDevelop generated
+.vs/
+*.sln
+*.pidb
+*.pdb
+*.pdb.meta
+*.suo
+*.user
+*.userprefs
+*.svd
+*.unityproj
+*.csproj
+*.booproj
+.vscode/
+
+##########
+# OS generated
+.DS_Store
+Thumbs.db
