@@ -7,8 +7,10 @@ public class arrowGenerator : MonoBehaviour {
     float span = 1.0f;
     float delta = 0;
 	// Use this for initialization
-	void Start () {
-		
+	void Start ()
+	{
+		var a = Camera.main.ViewportToWorldPoint(new Vector3(1f, 0, 0));
+		Debug.Log((a));
 	}
 	
 	// Update is called once per frame
@@ -18,8 +20,8 @@ public class arrowGenerator : MonoBehaviour {
         {
             this.delta = 0;
             GameObject go = Instantiate(arrowPrefab) as GameObject;
-            int px = Random.Range(-6, 7);
-            go.transform.position = new Vector3(px, 7, 0);
+            // int px = Random.Range(-6, 7);
+            // go.transform.position = new Vector3(px, 7, 0);
         }
 	}
 }

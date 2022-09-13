@@ -10,9 +10,5 @@ public class gameDirector : MonoBehaviour {
         this.hpGage = GameObject.Find("hpGage");
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
     public void DecreaseHp() { this.hpGage.GetComponent<Image>().fillAmount -= 0.1f;  }
 }
