@@ -7,10 +7,8 @@ public class arrowGenerator : MonoBehaviour {
     float span = 1.0f;
     float delta = 0;
 	// Use this for initialization
-	void Start ()
-	{
-		var a = Camera.main.ViewportToWorldPoint(new Vector3(1f, 0, 0));
-		Debug.Log((a));
+	void Start () {
+		
 	}
 	
 	// Update is called once per frame

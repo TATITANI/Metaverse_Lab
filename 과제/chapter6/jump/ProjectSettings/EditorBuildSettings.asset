@@ -6,8 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/jump.unity
+    path: Assets/jump1.unity
+    guid: d949d86976caf1443a4bbaffe848fa62
+  - enabled: 1
+    path: Assets/jump2.unity
     guid: 41ca58c06991e3c40b5b7bd7b75de42e
   - enabled: 1
     path: Assets/clearScene.unity
     guid: 2def1966f41586d4db1db95151018fd5
+  m_configObjects: {}

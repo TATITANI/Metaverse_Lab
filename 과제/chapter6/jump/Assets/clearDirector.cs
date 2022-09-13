@@ -15,7 +15,7 @@ public class clearDirector : MonoBehaviour {
 	void Update () {
         if (Input.GetMouseButtonDown(0))
         {
-            SceneManager.LoadScene("jump");
+            SceneManager.LoadScene("jump1");
         }
 	}
 }
