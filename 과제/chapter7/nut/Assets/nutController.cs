@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class nutController : MonoBehaviour {
 
 	// Use this for initialization
@@ -13,7 +12,8 @@ public class nutController : MonoBehaviour {
     {
         GetComponent<Rigidbody>().isKinematic = true;
         GetComponent<ParticleSystem>().Play();
-
+        GetComponent<SphereCollider>().enabled = false;
+        ScoreManager.Instance.ApplyScore(transform.position);
         Debug.Log("collision");
     }
     public void Shoot(Vector3 dir)
