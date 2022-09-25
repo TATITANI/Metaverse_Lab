@@ -37,7 +37,7 @@ public class itemmake : MonoBehaviour
                 item = Instantiate(applePrefab) as GameObject;
             }
             float x = Random.Range(-1, 2);
-            float z = Random.Range(-1, 2);
+            float z = Random.Range(-1, 3);
             item.transform.position = new Vector3(x, 4, z);
         }
 		
