@@ -15,6 +15,7 @@ public class MeshDeformer : MonoBehaviour
 
     private void Start()
     {
+        //      
         cam = Camera.main;
         mesh = GetComponent<MeshFilter>().mesh;
         meshCollider = GetComponent<MeshCollider>();
