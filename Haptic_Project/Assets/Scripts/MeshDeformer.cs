@@ -1,7 +1,10 @@
 using System;
 using System.Linq;
+using Leap.Unity.Interaction;
+using Unity.VisualScripting;
 using UnityEngine;
 
+[RequireComponent(typeof(MeshFilter))]
 public class MeshDeformer : MonoBehaviour
 {
     private Mesh mesh;
@@ -13,9 +16,14 @@ public class MeshDeformer : MonoBehaviour
     // 탄성
     [SerializeField] [Min(0)] private float elasticity = 1f;
 
+    private HandController controller;
+    private InteractionBehaviour interaction;
+
     private void Start()
     {
-        //      
+        interaction = GetComponent<InteractionBehaviour>();
+        controller = AppManager.Instance.handController;
+
         cam = Camera.main;
         mesh = GetComponent<MeshFilter>().mesh;
         meshCollider = GetComponent<MeshCollider>();
@@ -50,7 +58,7 @@ public class MeshDeformer : MonoBehaviour
                     // 충돌점으로부터 법선벡터 쪽으로 약간 올라간 좌표를 입력. 
                     const float hitPointOffset = 0.1f;
                     Vector3 point = hit.point + hit.normal * hitPointOffset;
-                    const float power = 1f;
+                    const float power = 20f;
                     Press(point, power);
                 }
             }
@@ -102,12 +110,20 @@ public class MeshDeformer : MonoBehaviour
         mesh.RecalculateNormals();
         mesh.RecalculateBounds();
         mesh.RecalculateTangents();
-        meshCollider.sharedMesh = mesh;
+        // meshCollider.sharedMesh = mesh;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log($" collision - impulse :  {collision.impulse}," +
-                  $" relativeVelocity : {collision.relativeVelocity}");
+        // Debug.Log($" collision - impulse :  {collision.impulse}," +
+        //           $" relativeVelocity : {collision.relativeVelocity}");
+    }
+
+    public void OnGrab()
+    {
+        foreach (var hand in interaction.graspingHands)
+        {
+            bool isleft = hand.isLeft;
+        }
     }
 }
