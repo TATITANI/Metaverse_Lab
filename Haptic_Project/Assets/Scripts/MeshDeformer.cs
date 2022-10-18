@@ -15,6 +15,7 @@ public class MeshDeformer : MonoBehaviour
 
     // 탄성
     [SerializeField] [Min(0)] private float elasticity = 1f;
+    [SerializeField] float power = 5f;
 
     private HandController controller;
     private InteractionBehaviour interaction;
@@ -58,14 +59,13 @@ public class MeshDeformer : MonoBehaviour
                     // 충돌점으로부터 법선벡터 쪽으로 약간 올라간 좌표를 입력. 
                     const float hitPointOffset = 0.1f;
                     Vector3 point = hit.point + hit.normal * hitPointOffset;
-                    const float power = 20f;
-                    Press(point, power);
+                    Press(point);
                 }
             }
         }
     }
 
-    void Press(Vector3 contactPos, float power)
+    void Press(Vector3 contactPos)
     {
         // world -> local
         Vector3 contactLocalPos = transform.InverseTransformPoint(contactPos);
@@ -75,7 +75,7 @@ public class MeshDeformer : MonoBehaviour
             Vector3 diff = (vertices[i] - contactLocalPos);
             Vector3 direction = diff.normalized;
             float distance = diff.sqrMagnitude;
-            float velocity = power / Mathf.Pow(1 + distance, 2);
+            float velocity = power / Mathf.Pow(1 + distance * 8, 2);
             velocities[i] += direction * velocity * Time.deltaTime;
         }
     }
@@ -110,7 +110,7 @@ public class MeshDeformer : MonoBehaviour
         mesh.RecalculateNormals();
         mesh.RecalculateBounds();
         mesh.RecalculateTangents();
-        // meshCollider.sharedMesh = mesh;
+        meshCollider.sharedMesh = mesh;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -121,9 +121,28 @@ public class MeshDeformer : MonoBehaviour
 
     public void OnGrab()
     {
+        RaycastHit hit;
         foreach (var hand in interaction.graspingHands)
         {
-            bool isleft = hand.isLeft;
+            HandController.HandPivot handPivot = hand.isLeft ? controller.leftHandPivot : controller.rightHandPivot;
+
+            var pivots = handPivot.Pivots;
+            for (int i = 0; i < pivots.Length; i++)
+            {
+                Vector3 dir = handPivot.GetGrabDir(i);
+                Ray ray = new Ray(pivots[i].position, dir);
+                if (Physics.Raycast(ray, out hit, 0.001f))
+                {
+                    if (hit.collider.gameObject == this.gameObject)
+                    {
+                        // 직접 닿은 표면에 압력을 주기 위해서
+                        // 충돌점으로부터 법선벡터 쪽으로 약간 올라간 좌표를 입력. 
+                        const float hitPointOffset = 0.05f;
+                        Vector3 point = hit.point + hit.normal * hitPointOffset;
+                        Press(point);
+                    }
+                }
+            }
         }
     }
 }
