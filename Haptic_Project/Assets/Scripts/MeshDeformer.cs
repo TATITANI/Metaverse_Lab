@@ -20,6 +20,7 @@ public class MeshDeformer : MonoBehaviour
     private HandController controller;
     private InteractionBehaviour interaction;
 
+    private bool isDeformed = false;
     private void Start()
     {
         interaction = GetComponent<InteractionBehaviour>();
@@ -33,6 +34,7 @@ public class MeshDeformer : MonoBehaviour
         vertices = (Vector3[])mesh.vertices.Clone();
         initVertices = (Vector3[])mesh.vertices.Clone();
         normals = mesh.normals;
+        
     }
 
     private void Update()
@@ -66,7 +68,10 @@ public class MeshDeformer : MonoBehaviour
     }
 
     void Press(Vector3 contactPos)
-    {
+    { 
+        // 임시
+        isDeformed = true;
+ 
         // world -> local
         Vector3 contactLocalPos = transform.InverseTransformPoint(contactPos);
         // Debug.Log($" contactPos : {contactPos}");
@@ -106,6 +111,9 @@ public class MeshDeformer : MonoBehaviour
 
     void UpdateMesh()
     {
+        if (!isDeformed)
+            return; 
+        
         mesh.vertices = vertices;
         mesh.RecalculateNormals();
         mesh.RecalculateBounds();
