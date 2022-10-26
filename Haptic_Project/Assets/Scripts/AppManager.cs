@@ -14,7 +14,7 @@ public class AppManager : MonoBehaviour
                 _instance = FindObjectOfType<AppManager>();
             if (_instance == null)
             {
-                GameObject container = new GameObject("Singleton");
+                GameObject container = new GameObject("AppManager");
                 _instance = container.AddComponent<AppManager>();
             }
             return _instance;

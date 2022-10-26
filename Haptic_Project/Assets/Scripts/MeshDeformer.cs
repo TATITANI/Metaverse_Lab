@@ -21,6 +21,7 @@ public class MeshDeformer : MonoBehaviour
     private InteractionBehaviour interaction;
 
     private bool isDeformed = false;
+    private bool onGrab = false;
     private void Start()
     {
         interaction = GetComponent<InteractionBehaviour>();
@@ -34,16 +35,18 @@ public class MeshDeformer : MonoBehaviour
         vertices = (Vector3[])mesh.vertices.Clone();
         initVertices = (Vector3[])mesh.vertices.Clone();
         normals = mesh.normals;
-        
     }
 
     private void Update()
     {
         ProcessInput();
+        if (isDeformed)
+        {
         Restore();
         Flex();
         UpdateVertex();
         UpdateMesh();
+    }
     }
 
     void ProcessInput()
@@ -85,20 +88,26 @@ public class MeshDeformer : MonoBehaviour
         }
     }
 
-    void Flex()
-    {
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            velocities[i] *= elasticity * Time.deltaTime;
-        }
-    }
-
     void Restore()
     {
         for (int i = 0; i < velocities.Length; i++)
         {
             velocities[i] -= (vertices[i] - initVertices[i]) * elasticity * Time.deltaTime;
         }
+    }
+
+    void Flex()
+    {
+        float diff = 0;
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            velocities[i] *= elasticity * Time.deltaTime;
+            diff += velocities[i].sqrMagnitude;
+        }
+        diff *= Mathf.Pow(10, 8);
+        isDeformed = diff > 0.1f|| onGrab;
+
+        // Debug.Log($"diff : {diff}");
     }
 
     void UpdateVertex()
@@ -111,9 +120,6 @@ public class MeshDeformer : MonoBehaviour
 
     void UpdateMesh()
     {
-        if (!isDeformed)
-            return; 
-        
         mesh.vertices = vertices;
         mesh.RecalculateNormals();
         mesh.RecalculateBounds();
@@ -127,6 +133,14 @@ public class MeshDeformer : MonoBehaviour
         //           $" relativeVelocity : {collision.relativeVelocity}");
     }
 
+    public void OnGrabBegin()
+    {
+        onGrab = true;
+    }
+    public void OnGrabEnd()
+    {
+        onGrab = false;
+    }
     public void OnGrab()
     {
         RaycastHit hit;
