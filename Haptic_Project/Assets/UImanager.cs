@@ -6,10 +6,13 @@ using TMPro;
 public class UImanager : MonoBehaviour
 {
     [SerializeField] float timeStart;
-    [SerializeField] float EMGStart; //아두이노에서 받아오기 
-    //[SerializeField] TextMesh Text_time, startPauseText;
+    [SerializeField] float EMGStart; //EMG 현재 센싱 값 / 아두이노에서 받아오기 
+    [SerializeField] int EMG_Grab; //EMG 쥐는 동작 카운트 / 아두이노에서 받아오기 
+    [SerializeField] int EMG_Pickup; //EMG 집는 동작 카운트 / 아두이노에서 받아오기 
+
     [SerializeField] TextMeshProUGUI Text_time, Time_startPauseText;
     [SerializeField] TextMeshProUGUI Text_EMG, EMG_startPauseText;
+    [SerializeField] TextMeshProUGUI Text_Grab_Count , Text_Pickup_Count;
 
     bool timeActive = false;
     bool EMG_Active = false;
@@ -57,6 +60,12 @@ public class UImanager : MonoBehaviour
         {
             EMGStart += Time.deltaTime;
             Text_EMG.text = EMGStart.ToString("F2");
+
+            //Test용 시간이 지남에 따라 EMG_Grab과 EMG_Pickup 개수 
+            EMG_Grab = (int)EMGStart / 3;
+            EMG_Pickup= (int)EMGStart / 2;
+            Text_Grab_Count.text=EMG_Grab.ToString();
+            Text_Pickup_Count.text=EMG_Pickup.ToString();
         }
     }
 
@@ -73,5 +82,10 @@ public class UImanager : MonoBehaviour
             EMGStart = 0f;
             Text_EMG.text = EMGStart.ToString("F2");
         }
+    }
+     public void EMG_ResetCount()
+    {
+        Text_Grab_Count.text="0";
+        Text_Pickup_Count.text="0";
     }
 }
