@@ -8,18 +8,19 @@ using UnityEngine.Events;
 [Serializable]
 public class GrabPos
 {
-    public int id;
+    public bool isLeft;
+    public int fingerID;
     public Vector3 pos;
 };
 
 [RequireComponent(typeof(InteractionBehaviour))]
 public class Grabbable : MonoBehaviour
 {
+    [SerializeField] private HandControllerSO controllerSO;
     private HandController controller;
     private InteractionBehaviour interaction;
-    private bool onGrab = false;
 
-    [SerializeField] private UnityEvent<GrabPos> eventGrab; 
+    [SerializeField] private UnityEvent<GrabPos> eventGrab;
     private GrabPos grabPos = new GrabPos();
 
     private void Start()
@@ -33,12 +34,13 @@ public class Grabbable : MonoBehaviour
 
     public void OnGrabBegin()
     {
-        onGrab = true;
+        controllerSO.isGrab = true;
     }
 
     public void OnGrabEnd()
     {
-        onGrab = false;
+        controllerSO.isGrab = false;
+        controllerSO.ResetFingerPressure();
     }
 
     public void OnGrab()
@@ -61,8 +63,9 @@ public class Grabbable : MonoBehaviour
                         // 충돌점으로부터 법선벡터 쪽으로 약간 올라간 좌표를 입력. 
                         const float hitPointOffset = 0.05f;
                         Vector3 contctPos = hit.point + hit.normal * hitPointOffset;
-                        
-                        grabPos.id = fingerID;
+
+                        grabPos.isLeft = hand.isLeft;
+                        grabPos.fingerID = fingerID;
                         grabPos.pos = contctPos;
                         eventGrab?.Invoke(grabPos);
                     }

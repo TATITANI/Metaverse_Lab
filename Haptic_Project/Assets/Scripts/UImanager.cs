@@ -5,6 +5,22 @@ using UnityEngine.UI;
 using TMPro;
 public class UImanager : MonoBehaviour
 {
+    private static UImanager _instance;
+    public static UImanager Instance
+    {
+        get
+        {
+            if (_instance == null)
+                _instance = FindObjectOfType<UImanager>();
+            if (_instance == null)
+            {
+                GameObject container = new GameObject("UImanager");
+                _instance = container.AddComponent<UImanager>();
+            }
+            return _instance;
+        }
+    }
+    
     [SerializeField] float timeStart;
     [SerializeField] float EMGStart; //EMG 현재 센싱 값 / 아두이노에서 받아오기 
     [SerializeField] int EMG_Grab; //EMG 쥐는 동작 카운트 / 아두이노에서 받아오기 
@@ -13,6 +29,8 @@ public class UImanager : MonoBehaviour
     [SerializeField] TextMeshProUGUI Text_time, Time_startPauseText;
     [SerializeField] TextMeshProUGUI Text_EMG, EMG_startPauseText;
     [SerializeField] TextMeshProUGUI Text_Grab_Count , Text_Pickup_Count;
+    [SerializeField] private List<GaugeUI> listPressureUI;
+    [SerializeField] private HandControllerSO controllerSO;
 
     bool timeActive = false;
     bool EMG_Active = false;
@@ -28,6 +46,7 @@ public class UImanager : MonoBehaviour
     {
         StartTime();
         EMG_StartEMG();
+        UpdatePressure();
     }
 
     void StartTime()
@@ -88,4 +107,17 @@ public class UImanager : MonoBehaviour
         Text_Grab_Count.text="0";
         Text_Pickup_Count.text="0";
     }
+
+     public void UpdatePressure()
+     {
+         for (int i = 0; i < listPressureUI.Count; i++)
+         {
+             listPressureUI[i].SetState(controllerSO.pressureRight[i].fingerPressure);
+         }
+     }
+
+     public void UpdatePressure(int id, float pressure)
+     {
+         listPressureUI[id].SetState(pressure);
+     }
 }
