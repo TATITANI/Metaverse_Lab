@@ -7,9 +7,9 @@ using TMPro;
 public class BT_Test : MonoBehaviour
 {
     public TMP_InputField inputText;
-    public string receivedText;
+    public TextMeshProUGUI receivedText;
 
-    public bool IsDataReceived =false;
+    public bool IsDataReceived =true;
 
     // Start is called before the first frame update
     void Start()
@@ -38,6 +38,6 @@ public class BT_Test : MonoBehaviour
         //Serial.write(data);
     }
     private void UpdateReceivedData(){
-        receivedText="Data";
+        receivedText.text=inputText.text;
     }
 }
