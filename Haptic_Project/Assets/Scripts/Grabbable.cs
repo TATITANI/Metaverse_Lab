@@ -8,7 +8,6 @@ using UnityEngine.Events;
 [Serializable]
 public class GrabPos
 {
-    public bool isLeft;
     public int fingerID;
     public Vector3 pos;
 };
@@ -40,7 +39,7 @@ public class Grabbable : MonoBehaviour
     public void OnGrabEnd()
     {
         controllerSO.isGrab = false;
-        controllerSO.ResetFingerPressure();
+        // controllerSO.ResetFingerPressure();
     }
 
     public void OnGrab()
@@ -48,12 +47,15 @@ public class Grabbable : MonoBehaviour
         RaycastHit hit;
         foreach (var hand in interaction.graspingHands)
         {
-            HandPivot handPivot = hand.isLeft ? controller.leftHandPivot : controller.rightHandPivot;
+            if(hand.isLeft)
+                continue;
+            
+            HandPivot rightHandPivot = controller.rightHandPivot;
 
-            var pivots = handPivot.Pivots;
+            var pivots = rightHandPivot.Pivots;
             for (int fingerID = 0; fingerID < pivots.Length; fingerID++)
             {
-                Vector3 dir = handPivot.GetGrabDir(fingerID);
+                Vector3 dir = rightHandPivot.GetGrabDir(fingerID);
                 Ray ray = new Ray(pivots[fingerID].position, dir);
                 if (Physics.Raycast(ray, out hit, 0.001f))
                 {
@@ -64,7 +66,6 @@ public class Grabbable : MonoBehaviour
                         const float hitPointOffset = 0.05f;
                         Vector3 contctPos = hit.point + hit.normal * hitPointOffset;
 
-                        grabPos.isLeft = hand.isLeft;
                         grabPos.fingerID = fingerID;
                         grabPos.pos = contctPos;
                         eventGrab?.Invoke(grabPos);

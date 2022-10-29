@@ -13,9 +13,10 @@ public class GaugeUI : MonoBehaviour
       text = GetComponentInChildren<TextMeshProUGUI>();
    }
 
+   /// <param name="pressure"> 0~1 </param>
    public void SetState(float pressure)
    {
-      // img.fillAmount = percent * 0.01f;
-      text.text = $"{pressure}";
+      img.fillAmount = pressure;
+      text.text = $"{pressure*100:0.0}";
    }
 }

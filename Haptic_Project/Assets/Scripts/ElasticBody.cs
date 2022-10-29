@@ -11,10 +11,21 @@ public class ElasticBody : MonoBehaviour
 
     private Vector3[] initVertices, vertices, velocities, normals;
 
-    [SerializeField] private ElasticBodySO data;
+    // 탄성
+    [Min(0)] [SerializeField] float elasticity = 5f;
+
+    // 누르는 압력
+    [Min(0)] [SerializeField] float power = 5f;
+
+    // 감쇠
+    [Min(0)] [SerializeField] float damping = 5f;
+
+    // 압력지점 거리에 따른 감쇠
+    [Min(0)] [SerializeField] float attenuation = 15f;
 
     private bool isDeformed = false;
 
+    private float initVertexSqrMag;
 
     private void Start()
     {
@@ -27,6 +38,9 @@ public class ElasticBody : MonoBehaviour
         vertices = (Vector3[])mesh.vertices.Clone();
         initVertices = (Vector3[])mesh.vertices.Clone();
         normals = mesh.normals;
+
+        // 구체이므로 정점거리 한 곳만 측정
+        initVertexSqrMag = initVertices[0].sqrMagnitude;
     }
 
     private void Update()
@@ -70,7 +84,6 @@ public class ElasticBody : MonoBehaviour
         }
     }
 
-
     public void Press(GrabPos grabPos)
     {
         // world -> local
@@ -90,18 +103,18 @@ public class ElasticBody : MonoBehaviour
             }
 
             Vector3 direction = diff.normalized;
-            float velocity = data.power / Mathf.Pow(1 + distance * data.attenuation, 2);
+            float velocity = power / Mathf.Pow(1 + distance * attenuation, 2);
             velocities[i] += direction * velocity * Time.deltaTime;
         }
 
-        controllerSO.SetFingerPressingVertex(grabPos.isLeft, grabPos.fingerID, pressingVertexID);
+        controllerSO.SetFingerPressingVertex(grabPos.fingerID, pressingVertexID);
     }
 
     void Restore()
     {
         for (int i = 0; i < velocities.Length; i++)
         {
-            velocities[i] -= (vertices[i] - initVertices[i]) * data.elasticity * Time.deltaTime;
+            velocities[i] -= (vertices[i] - initVertices[i]) * elasticity * Time.deltaTime;
         }
     }
 
@@ -109,7 +122,7 @@ public class ElasticBody : MonoBehaviour
     {
         for (int i = 0; i < vertices.Length; i++)
         {
-            velocities[i] *= data.damping * Time.deltaTime;
+            velocities[i] *= damping * Time.deltaTime;
         }
     }
 
@@ -131,15 +144,15 @@ public class ElasticBody : MonoBehaviour
     {
         for (int i = 0; i < controllerSO.pressureRight.Length; i++)
         {
-            int vertexID = controllerSO.pressureRight[i].vertexID;
-            // Debug.Log($"? {vertexID}");
-            float diff = (vertices[vertexID] - initVertices[vertexID]).sqrMagnitude;
-
-            // todo : 퍼센트로 변경
-            diff *= 1000000; // 임시값 
-
+            float pressure = 0;
             bool isPress = controllerSO.pressureRight[i].isPress;
-            controllerSO.SetFingerPressure(false, i, isPress ? (int)diff : 0);
+            if (isPress)
+            {
+                int vertexID = controllerSO.pressureRight[i].vertexID;
+                pressure = (vertices[vertexID] - initVertices[vertexID]).sqrMagnitude /
+                           initVertexSqrMag;
+                controllerSO.SetFingerPressure(i, pressure);
+            }
         }
     }
 

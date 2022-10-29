@@ -4,42 +4,34 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-
-[CreateAssetMenu(fileName = "HandControllerData", menuName = "Scriptable Object/HandControllerData", order = int.MaxValue)]
+[CreateAssetMenu(fileName = "HandControllerData", menuName = "Scriptable Object/HandControllerData",
+    order = int.MaxValue)]
 public class HandControllerSO : ScriptableObject
 {
-    public bool isGrab;
+    public bool isGrab = false;
+
     [System.Serializable]
     public class PressureInfo
     {
         public int vertexID = -1;
-        public float fingerPressure = 0;
+        public float fingerPressure = 0; // 0~1
         public bool isPress = false;
     }
-    public PressureInfo[] pressureLeft { get; private set; } = new PressureInfo[5];
-    public PressureInfo[] pressureRight { get; private set; } = new PressureInfo[5];
-    
-    public void SetFingerPressingVertex(bool isLeft, int fingerID, int vertexID)
+
+    public PressureInfo[] pressureRight { get; private set; } = new PressureInfo[3];
+
+    public void SetFingerPressingVertex(int fingerID, int vertexID)
     {
-        if (isLeft)
-            pressureLeft[fingerID].vertexID = vertexID;
-        else
-            pressureRight[fingerID].vertexID = vertexID;
+        pressureRight[fingerID].vertexID = vertexID;
     }
 
-    public void SetFingerPressure(bool isLeft, int fingerID, float pressure)
+    public void SetFingerPressure(int fingerID, float pressure)
     {
-        if (isLeft)
-            pressureLeft[fingerID].fingerPressure = pressure;
-        else
-        {
-            pressureRight[fingerID].fingerPressure = pressure;
-        }
+        pressureRight[fingerID].fingerPressure = pressure;
     }
 
     public void ResetFingerPressure()
     {
-        Array.ForEach(pressureLeft, p => p.fingerPressure = 0);
         Array.ForEach(pressureRight, p => p.fingerPressure = 0);
     }
 }
