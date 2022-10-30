@@ -5,12 +5,6 @@ using Leap.Unity.Interaction;
 using UnityEngine;
 using UnityEngine.Events;
 
-[Serializable]
-public class GrabPos
-{
-    public int fingerID;
-    public Vector3 pos;
-};
 
 [RequireComponent(typeof(InteractionBehaviour))]
 public class Grabbable : MonoBehaviour
@@ -22,14 +16,14 @@ public class Grabbable : MonoBehaviour
     [SerializeField] private UnityEvent<GrabPos> eventGrab;
     private GrabPos grabPos = new GrabPos();
 
-    private void Start()
-    {
-        interaction = GetComponent<InteractionBehaviour>();
-        controller = AppManager.Instance.handController;
-        interaction.OnGraspBegin = OnGrabBegin;
-        interaction.OnGraspStay = OnGrab;
-        interaction.OnGraspEnd = OnGrabEnd;
-    }
+    // private void Start()
+    // {
+    //     interaction = GetComponent<InteractionBehaviour>();
+    //     // controller = AppManager.Instance.handController;
+    //     // // interaction.OnGraspBegin = OnGrabBegin;
+    //     // // interaction.OnGraspStay = OnGrab;
+    //     // // interaction.OnGraspEnd = OnGrabEnd;
+    // }
 
     public void OnGrabBegin()
     {

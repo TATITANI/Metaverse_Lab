@@ -57,10 +57,7 @@ public class ElasticBody : MonoBehaviour
             UpdateMesh();
         }
 
-        if (controllerSO.isGrab)
-        {
-            UpdateFingerPressure();
-        }
+        UpdateFingerPressure();
     }
 
     void ProcessInput()
@@ -142,17 +139,18 @@ public class ElasticBody : MonoBehaviour
 
     void UpdateFingerPressure()
     {
-        for (int i = 0; i < controllerSO.pressureRight.Length; i++)
+        for (int fingerID = 0; fingerID < controllerSO.pressureRight.Length; fingerID++)
         {
             float pressure = 0;
-            bool isPress = controllerSO.pressureRight[i].isPress;
+            bool isPress = controllerSO.pressureRight[fingerID].isPress;
             if (isPress)
             {
-                int vertexID = controllerSO.pressureRight[i].vertexID;
+                int vertexID = controllerSO.pressureRight[fingerID].vertexID;
                 pressure = (vertices[vertexID] - initVertices[vertexID]).sqrMagnitude /
                            initVertexSqrMag;
-                controllerSO.SetFingerPressure(i, pressure);
             }
+
+            controllerSO.SetFingerPressure(fingerID, pressure);
         }
     }
 
