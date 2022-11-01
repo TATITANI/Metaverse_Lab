@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3458012906804942665}
   - component: {fileID: 3458012906804942671}
   - component: {fileID: 3826539322953267979}
+  - component: {fileID: 4528906298702907631}
   - component: {fileID: 3826539322953267980}
   m_Layer: 0
   m_Name: Soccerball
@@ -162,6 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c01017c181827e24085987476804e7fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controllerSO: {fileID: 0}
   eventGrab:
     m_PersistentCalls:
       m_Calls:
@@ -177,6 +179,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &4528906298702907631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3456626971447723635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb11d9f3e1a6b3640848ce69a3368c6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3826539322953267980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189,4 +203,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ca46ec0a74fc094aa8af43869a39395, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: dda8068e74d94bb4cb7d50ab475de484, type: 2}
+  controllerSO: {fileID: 0}
+  elasticity: 5
+  power: 5
+  damping: 5
+  attenuation: 15
