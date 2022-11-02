@@ -139,6 +139,22 @@ public class ElasticBody : MonoBehaviour
         isDeformed = diff > 0.1f;
     }
 
+<<<<<<< HEAD
+=======
+    void UpdateFingerPressure()
+    {
+        for (int fingerID = 0; fingerID < controllerSO.pressureRight.Length; fingerID++)
+        {
+            if (controllerSO.pressureRight[fingerID].isPress)
+            {
+                int vertexID = controllerSO.pressureRight[fingerID].vertexID;
+                float pressure = (vertices[vertexID] - initVertices[vertexID]).sqrMagnitude /
+                                 initVertexSqrMag;
+                controllerSO.SetFingerPressure(fingerID, pressure);
+            }
+        }
+    }
+>>>>>>> c41ece9 (압력 측정방식 수정, UI 표시)
 
     void UpdateMesh()
     {

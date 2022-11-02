@@ -164,6 +164,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controllerSO: {fileID: 11400000, guid: 739c3a9e2854e3d4d800e2672ba1e6d1, type: 2}
+<<<<<<< HEAD
+=======
+  eventGrab:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3826539322953267980}
+        m_TargetAssemblyTypeName: ElasticBody, Assembly-CSharp
+        m_MethodName: Press
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+>>>>>>> c41ece9 (압력 측정방식 수정, UI 표시)
 --- !u!114 &4528906298702907631
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -953,7 +953,11 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+<<<<<<< HEAD
   m_Name: pb_Mesh123522
+=======
+  m_Name: pb_Mesh62146
+>>>>>>> c41ece9 (압력 측정방식 수정, UI 표시)
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1361,7 +1365,11 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+<<<<<<< HEAD
   m_Name: pb_Mesh123534
+=======
+  m_Name: pb_Mesh62158
+>>>>>>> c41ece9 (압력 측정방식 수정, UI 표시)
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
