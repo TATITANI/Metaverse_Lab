@@ -141,16 +141,13 @@ public class ElasticBody : MonoBehaviour
     {
         for (int fingerID = 0; fingerID < controllerSO.pressureRight.Length; fingerID++)
         {
-            float pressure = 0;
-            bool isPress = controllerSO.pressureRight[fingerID].isPress;
-            if (isPress)
+            if (controllerSO.pressureRight[fingerID].isPress)
             {
                 int vertexID = controllerSO.pressureRight[fingerID].vertexID;
-                pressure = (vertices[vertexID] - initVertices[vertexID]).sqrMagnitude /
-                           initVertexSqrMag;
+                float pressure = (vertices[vertexID] - initVertices[vertexID]).sqrMagnitude /
+                                 initVertexSqrMag;
+                controllerSO.SetFingerPressure(fingerID, pressure);
             }
-
-            controllerSO.SetFingerPressure(fingerID, pressure);
         }
     }
 
