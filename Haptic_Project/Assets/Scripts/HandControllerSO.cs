@@ -13,17 +13,10 @@ public class HandControllerSO : ScriptableObject
     [System.Serializable]
     public class PressureInfo
     {
-        public int vertexID = -1;
         public float fingerPressure = 0; // 0~1
-        public bool isPress = false;
     }
 
     public PressureInfo[] pressureRight { get; private set; } = new PressureInfo[3];
-
-    public void SetFingerPressingVertex(int fingerID, int vertexID)
-    {
-        pressureRight[fingerID].vertexID = vertexID;
-    }
 
     public void SetFingerPressure(int fingerID, float pressure)
     {
