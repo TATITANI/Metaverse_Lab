@@ -4,13 +4,6 @@ using UnityEditor.TerrainTools;
 using UnityEngine;
 
 
-public class GrabPos
-{
-    public int fingerID;
-    public Vector3 pos;
-};
-
-
 [System.Serializable]
 public class HandPivot
 {
@@ -30,8 +23,6 @@ public class HandController : MonoBehaviour
     [SerializeField] HandControllerSO data;
     [Header("0: 엄지 ~ 2: 중지")] public HandPivot rightHandPivot;
 
-    private GrabPos grabPos = new GrabPos();
-    
     /// <summary>
     /// press는 touch 판정 범위 안에 속함
     /// 구분 이유 : 손으로 물체를 누르면 순간적으로 충돌지점이
@@ -59,21 +50,17 @@ public class HandController : MonoBehaviour
                     ElasticBody elasticBody = hit.transform.GetComponent<ElasticBody>();
                     if (!ReferenceEquals(elasticBody, null))
                     {
-                        data.pressureRight[fingerID].isPress = true;
                         // 직접 닿은 표면에 압력을 주기 위해서
                         // 충돌점으로부터 법선벡터 쪽으로 약간 올라간 좌표를 입력. 
                         const float hitPointOffset = 0.01f;
-                        Vector3 contctPos = hit.point + hit.normal * hitPointOffset;
+                        Vector3 contactPos = hit.point + hit.normal * hitPointOffset;
 
-                        grabPos.fingerID = fingerID;
-                        grabPos.pos = contctPos;
-                        elasticBody.Press(grabPos);
+                        elasticBody.Press(fingerID, contactPos);
                     }
                 }
             }
             else
             {
-                data.pressureRight[fingerID].isPress = false;
                 data.SetFingerPressure(fingerID, 0);
             }
 

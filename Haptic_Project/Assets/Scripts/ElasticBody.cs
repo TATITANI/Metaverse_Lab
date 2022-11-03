@@ -11,8 +11,9 @@ public class ElasticBody : MonoBehaviour
 
     private Vector3[] initVertices, vertices, velocities, normals;
 
+    private const float maxElasticity = 20;
     // 탄성
-    [Min(0)] [SerializeField] float elasticity = 5f;
+    [Range(0,maxElasticity)] [SerializeField] float elasticity = 5f;
 
     // 누르는 압력
     [Min(0)] [SerializeField] float power = 5f;
@@ -57,7 +58,6 @@ public class ElasticBody : MonoBehaviour
             UpdateMesh();
         }
 
-        UpdateFingerPressure();
     }
 
     void ProcessInput()
@@ -75,16 +75,16 @@ public class ElasticBody : MonoBehaviour
                     // 충돌점으로부터 법선벡터 쪽으로 약간 올라간 좌표를 입력. 
                     const float hitPointOffset = 0.1f;
                     Vector3 point = hit.point + hit.normal * hitPointOffset;
-                    Press(new GrabPos() { pos = point });
+                    Press(0, point);
                 }
             }
         }
     }
 
-    public void Press(GrabPos grabPos)
+    public void Press(int fingerId, Vector3 pos)
     {
         // world -> local
-        Vector3 contactLocalPos = transform.InverseTransformPoint(grabPos.pos);
+        Vector3 contactLocalPos = transform.InverseTransformPoint(pos);
         // Debug.Log($" contactPos : {contactPos}{{");
 
         int pressingVertexID = 0;
@@ -104,7 +104,9 @@ public class ElasticBody : MonoBehaviour
             velocities[i] += direction * velocity * Time.deltaTime;
         }
 
-        controllerSO.SetFingerPressingVertex(grabPos.fingerID, pressingVertexID);
+        float pressure = (vertices[pressingVertexID] - initVertices[pressingVertexID]).sqrMagnitude 
+                         * elasticity / (initVertexSqrMag * maxElasticity );
+        controllerSO.SetFingerPressure(fingerId, pressure);
     }
 
     void Restore()
@@ -137,19 +139,6 @@ public class ElasticBody : MonoBehaviour
         isDeformed = diff > 0.1f;
     }
 
-    void UpdateFingerPressure()
-    {
-        for (int fingerID = 0; fingerID < controllerSO.pressureRight.Length; fingerID++)
-        {
-            if (controllerSO.pressureRight[fingerID].isPress)
-            {
-                int vertexID = controllerSO.pressureRight[fingerID].vertexID;
-                float pressure = (vertices[vertexID] - initVertices[vertexID]).sqrMagnitude /
-                                 initVertexSqrMag;
-                controllerSO.SetFingerPressure(fingerID, pressure);
-            }
-        }
-    }
 
     void UpdateMesh()
     {
