@@ -21,10 +21,10 @@ public class UImanager : MonoBehaviour
         }
     }
     
-    [SerializeField] float timeStart;
-    [SerializeField] float EMGStart; //EMG 현재 센싱 값 / 아두이노에서 받아오기 
-    [SerializeField] int EMG_Grab; //EMG 쥐는 동작 카운트 / 아두이노에서 받아오기 
-    [SerializeField] int EMG_Pickup; //EMG 집는 동작 카운트 / 아두이노에서 받아오기 
+    float timeStart;
+    float EMGStart; //EMG 현재 센싱 값 / 아두이노에서 받아오기 
+    int EMG_Grab; //EMG 쥐는 동작 카운트 / 아두이노에서 받아오기 
+    int EMG_Pickup; //EMG 집는 동작 카운트 / 아두이노에서 받아오기 
 
     [SerializeField] TextMeshProUGUI Text_time, Time_startPauseText;
     [SerializeField] TextMeshProUGUI Text_EMG, EMG_startPauseText;
