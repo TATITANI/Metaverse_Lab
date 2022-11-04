@@ -47,4 +47,5 @@ MonoBehaviour:
   inputText: {fileID: 0}
   receivedText: {fileID: 0}
   handControllerSo: {fileID: 11400000, guid: 739c3a9e2854e3d4d800e2672ba1e6d1, type: 2}
+  emgSO: {fileID: 11400000, guid: 9b58bd7f838904b47a39fb53c7fd3864, type: 2}
   IsDataReceived: 0

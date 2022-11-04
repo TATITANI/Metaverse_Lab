@@ -13,6 +13,7 @@ public class SerialCommunicator : MonoBehaviour
     private BluetoothHelper helper;
     private string deviceName;
     [SerializeField] private HandControllerSO handControllerSo;
+    [SerializeField] private EMG_SO emgSO;
 
 
     public bool IsDataReceived =true;
@@ -43,12 +44,15 @@ public class SerialCommunicator : MonoBehaviour
 
     IEnumerator Send()
     {
-        int pressure1 = (int)handControllerSo.pressureRight[0].fingerPressure;
-        int pressure2 = (int)handControllerSo.pressureRight[1].fingerPressure;
-        int pressure3 = (int)handControllerSo.pressureRight[2].fingerPressure;
-        string msg = $"{pressure1},{pressure2},{pressure3}";
-        helper.SendData(msg);
-        yield return new WaitForSeconds(0.01f);
+        while (true)
+        {
+            int pressure1 = (int)handControllerSo.pressureRight[0].fingerPressure;
+            int pressure2 = (int)handControllerSo.pressureRight[1].fingerPressure;
+            int pressure3 = (int)handControllerSo.pressureRight[2].fingerPressure;
+            string msg = $"{pressure1},{pressure2},{pressure3}";
+            helper.SendData(msg);
+            yield return new WaitForSeconds(0.01f);
+        }
     }
 
     // Update is called once per frame
@@ -60,6 +64,9 @@ public class SerialCommunicator : MonoBehaviour
         }
         if(IsDataReceived == true){
             UpdateReceivedData();
+            
+            // todo : 수신 emg 값 입력하기
+            // emgSO.PushData(emg);
         }
 
         if (helper.Available)

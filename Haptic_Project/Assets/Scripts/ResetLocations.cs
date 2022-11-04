@@ -13,16 +13,10 @@ public class ResetLocations : MonoBehaviour
         ResetObjects = FindObjectsOfType<MouseDraggable>(); //MouseDraggable 스크립트가 있는 오브젝트만 적용
         InitialLocations = new Vector3 [(ResetObjects.Length)]; //
         for(int i =0; i< ResetObjects.Length; i++){
-            print(ResetObjects[i].name);
+            // print(ResetObjects[i].name);
             InitialLocations[i]= new Vector3(ResetObjects[i].transform.position.x, ResetObjects[i].transform.position.y, ResetObjects[i].transform.position.z);
 
         }
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
         
     }
 
