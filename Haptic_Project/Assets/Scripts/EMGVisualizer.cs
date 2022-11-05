@@ -63,34 +63,35 @@ public class EMGVisualizer : MonoBehaviour
     {
         Queue<int> _datas = new Queue<int>(emgSO.datas);
 
-        int value = 0;
-        int id = 0;
+        int dataCnt = _datas.Count;
+        int pointID = points.Count-dataCnt;
+        int value;
         while (_datas.TryPeek(out value))
         {
-            points[id].gameObject.SetActive(true);
-            float y = value * valueNormalized;
-            points[id].anchoredPosition = new Vector2(points[id].anchoredPosition.x, y);
-            if (id > 0)
+            points[pointID].gameObject.SetActive(true);
+            float y = Mathf.Clamp(value * valueNormalized, 0, maxPeak);
+            points[pointID].anchoredPosition = new Vector2(points[pointID].anchoredPosition.x, y);
+
+            void DrawLine()
             {
-                void DrawLine()
-                {
-                    Vector2 startPos = points[id - 1].position;
-                    Vector2 endPos = points[id].position;
-                    Vector2 dir = (endPos - startPos).normalized;
-                    float distance = Vector2.Distance(startPos, endPos);
+                Vector2 startPos = points[pointID-1].position;
+                Vector2 endPos = points[pointID].position;
+                Vector2 dir = (endPos - startPos).normalized;
+                float distance = Vector2.Distance(startPos, endPos);
 
-                    int lineID = id - 1;
-                    lines[lineID].sizeDelta = new Vector2(distance, lines[lineID].sizeDelta.y);
-                    lines[lineID].position = startPos + dir * distance * 0.5f;
-                    float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-                    lines[lineID].eulerAngles = new Vector3(0, 0, angle);
-                    lines[lineID].gameObject.SetActive(true);
-                }
-
+                int lineID = pointID - 1;
+                lines[lineID].sizeDelta = new Vector2(distance, lines[lineID].sizeDelta.y);
+                lines[lineID].position = startPos + dir * distance * 0.5f;
+                float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                lines[lineID].eulerAngles = new Vector3(0, 0, angle);
+                lines[lineID].gameObject.SetActive(true);
+            }
+            if (pointID > points.Count - dataCnt)
+            {
                 DrawLine();
             }
 
-            id++;
+            pointID++;
             _datas.Dequeue();
         }
     }
@@ -113,7 +114,6 @@ public class EMGVisualizer : MonoBehaviour
         {
             int value = testDatas[dataId];
             dataId = (dataId == testDatas.Length - 1) ? 0 : dataId + 1;
-            value = Math.Clamp(value, 0, maxPeak);
             emgSO.PushData(value);
 
             yield return new WaitForSeconds(0.1f);
