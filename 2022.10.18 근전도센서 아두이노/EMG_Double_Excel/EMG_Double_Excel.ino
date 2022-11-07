@@ -40,6 +40,7 @@
 #define TIMING_DEBUG 1
 
 #define SensorInputPin A0 // input pin number
+#define SensorInputPin_1 A1 // input pin number
 
 EMGFilters myFilter;
 // discrete filters must works with fixed sample frequence
@@ -57,7 +58,11 @@ int humFreq = NOTCH_FREQ_50HZ;
 // put on the sensors, and release your muscles;
 // wait a few seconds, and select the max value as the threshold;
 // any value under threshold will be set to zero
-static int Threshold = 2000; //공 쥐는 거 : 700 / 집는거 손등 85
+static int Threshold_Min = 0; //유효 최소값
+static int Threshold_Max = 200000; //유효 최대값
+static int Threshold_Min_1 = 0; //유효 최소값
+static int Threshold_Max_1 = 200000; //유효 최대값 //공 쥐는 거 : 700 / 집는거 손등 85
+
 
 unsigned long timeStamp;
 unsigned long timeBudget;
@@ -83,7 +88,7 @@ void setup() {
     // micros will overflow and auto return to zero every 70 minutes
 
     Serial.println("CLEARDATA");
-    Serial.println("LABEL,Time,EMG,Counting,timeMillis");
+    Serial.println("LABEL,Time,Timer, EMG,EMG_1,T");//, Counting,timeMillis
     
     timeMillis=0;
     startMillis = millis();
@@ -98,35 +103,47 @@ void loop() {
     timeStamp = micros();
 
     int Value = analogRead(SensorInputPin);
-
+    //SensorInputPin_1
+    int Value_1 = analogRead(SensorInputPin_1);
+    
     // filter processing
     int DataAfterFilter = myFilter.update(Value);
-
+    int DataAfterFilter_1 = myFilter.update(Value_1);
+    
     int envlope = sq(DataAfterFilter);
+    int envlope_1 = sq(DataAfterFilter_1); 
+    
     // any value under threshold will be set to zero
-    envlope = (envlope > Threshold) ? envlope : 0;
-
+    envlope = (envlope > Threshold_Min ) ? envlope : 0;
+    envlope_1 = (envlope_1 > Threshold_Min_1 ) ? envlope_1 : 0;
+    
     timeStamp = micros() - timeStamp;
     if (TIMING_DEBUG) {
         // Serial.print("Read Data: "); Serial.println(Value);
         // Serial.print("Filtered Data: ");Serial.println(DataAfterFilter);
         //Serial.print("Squared Data: ");
         //Serial.println(0);
-        if(envlope !=0 && envlope<100000){
-          /*
-          Serial.print("DATA,");
-          Serial.print(millis());
-          Serial.print(",");
+        //if(envlope !=0 && envlope<Threshold_Max){
+        if(envlope<Threshold_Max || envlope_1<Threshold_Max_1){ 
+          Serial.print("DATA,TIME,TIMER,");
+          //Serial.print(millis()*0.001);
+          //Serial.print(",");
           //Serial.print("Squared Data: ");
           //Serial.println(envlope-Threshold);
           
-          Serial.print("envlope : ");
-         Serial.print(envlope);
+          //Serial.print("envlope : ");
+          Serial.print(envlope);
           Serial.print(", ");
-          Serial.print("count : ");
-         Serial.println(count);
-         */
-          delay(100); //excel 
+
+          Serial.print(envlope_1);
+          Serial.print(", ");
+          
+          Serial.print(millis()*0.001);
+          Serial.println(",");
+          //Serial.print("count : ");
+          //Serial.println(count);
+         
+          delay(200); //excel 
           if(maxEMG<envlope){
             maxEMG=envlope; //최대값 maxEMG
           }
@@ -137,6 +154,8 @@ void loop() {
         // Serial.print("Filters cost time: "); Serial.println(timeStamp);
         // the filter cost average around 520 us
     }
+     /*
+           
     currentMillis = millis();
     timeMillis = currentMillis-startMillis;
     
@@ -156,6 +175,8 @@ void loop() {
          sum=0;
          maxEMG=0;
       }
+     */
+     
     /*------------end here---------------------*/
     // if less than timeBudget, then you still have (timeBudget - timeStamp) to
     // do your work

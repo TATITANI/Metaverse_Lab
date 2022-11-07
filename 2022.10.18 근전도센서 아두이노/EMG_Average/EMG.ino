@@ -65,17 +65,16 @@ unsigned long timeMillis;
 unsigned long startMillis;
 unsigned long currentMillis;
 unsigned long previousMillis;
-const long interval = 10000; //120,000=2분(120,000ms)
- int count=1;
- unsigned long sum = 0; // 합
-  unsigned long ave = 0; // 평균
-  unsigned long maxEMG = 0;
+const long interval = 1000; //120000=2분(120000ms)
+int count=1;
+ int sum = 0; // 합
+  int ave = 0; // 평균
 void setup() {
     /* add setup code here */
     myFilter.init(sampleRate, humFreq, true, true, true);
 
     // open serial
-    Serial.begin(115200);
+    Serial.begin(9600);
 
     // setup for time cost measure
     // using micros()
@@ -119,17 +118,13 @@ void loop() {
           Serial.print(",");
           //Serial.print("Squared Data: ");
           //Serial.println(envlope-Threshold);
-          
-          Serial.print("envlope : ");
-         Serial.print(envlope);
-          Serial.print(", ");
-          Serial.print("count : ");
-         Serial.println(count);
-         */
-          delay(100); //excel 
-          if(maxEMG<envlope){
-            maxEMG=envlope; //최대값 maxEMG
-          }
+          */
+          Serial.print(envlope);
+          Serial.print(",");
+          Serial.print(count);
+          Serial.print(",");
+          Serial.println(timeMillis);
+          delay(200); //excel 
           count++;
           sum = sum + envlope;
         }
@@ -150,11 +145,8 @@ void loop() {
          Serial.println(sum);
          Serial.print("ave : ");
          Serial.println(ave);
-         Serial.print("maxEMG : ");
-         Serial.println(maxEMG);
          count = 1;
          sum=0;
-         maxEMG=0;
       }
     /*------------end here---------------------*/
     // if less than timeBudget, then you still have (timeBudget - timeStamp) to
