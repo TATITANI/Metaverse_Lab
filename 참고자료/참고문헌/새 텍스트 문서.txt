@@ -1,0 +1,10 @@
+Development of haptic gloves with vibration feedback as a tool for manipulation in virtual reality based on bend sensors and absolute orientation sensors
+
+
+
+손가락에는 근육이 없다.
+https://kormedi.com/1216389/%EC%86%90%EA%B0%80%EB%9D%BD%EC%97%94-%EA%B7%BC%EC%9C%A1%EC%9D%B4-%EC%97%86%EB%8B%A4-%EC%9E%AC%EB%AF%B8%EC%9E%88%EB%8A%94-%EC%86%90-%EC%9D%B4%EC%95%BC%EA%B8%B0/
+
+
+기능해부학 6-1 손가락관절-근육개요
+https://www.youtube.com/watch?v=SEDdR3VFRRA
