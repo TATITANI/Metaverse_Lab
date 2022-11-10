@@ -25,7 +25,7 @@ public class EMGVisualizer : MonoBehaviour
     private float valueNormalized;
     private void Awake()
     {
-        emgSO.RegisterOncChangedEvent(Draw);
+        emgSO.RegisterOnChangedEvent(Draw);
     }
 
     void Start()

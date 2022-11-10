@@ -20,7 +20,7 @@ public class EMG_SO : ScriptableObject
         ExecuteOnChangedEvents();
     }
 
-    public void RegisterOncChangedEvent(UnityAction _action)
+    public void RegisterOnChangedEvent(UnityAction _action)
     {
         OnChangedEvent.AddListener(_action);
     }
