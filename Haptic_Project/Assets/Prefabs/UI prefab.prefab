@@ -1895,7 +1895,7 @@ MonoBehaviour:
   spectrogramItem: {fileID: 1944606121}
   spectrogramItems: []
   horLayoutGroup: {fileID: 387189867}
-  blockSize: {x: 10, y: 10}
+  blockSize: {x: 20, y: 20}
   emgSo: {fileID: 11400000, guid: 9b58bd7f838904b47a39fb53c7fd3864, type: 2}
 --- !u!1 &890593133
 GameObject:

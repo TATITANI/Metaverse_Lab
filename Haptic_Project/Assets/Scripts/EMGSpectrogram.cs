@@ -16,20 +16,20 @@ public class EMGSpectrogram : MonoBehaviour
     [SerializeField] private EMG_SO emgSo;
 
     private Queue<Complex[]> itemDatas;
-
+    private int spectrogramSize;
     private void Awake()
     {
-        int capacity = emgSo.capacity;
+        spectrogramSize = Mathf.CeilToInt(emgSo.capacity/2);
         horLayoutGroup.GetComponent<RectTransform>().sizeDelta =
-            blockSize * capacity;
+            blockSize * spectrogramSize;
 
         spectrogramItem.gameObject.SetActive(false);
-        spectrogramItems = new SpectrogramItem[capacity];
-        for (int i = 0; i < capacity; i++)
+        spectrogramItems = new SpectrogramItem[spectrogramSize];
+        for (int i = 0; i < spectrogramSize; i++)
         {
             SpectrogramItem item =
                 Instantiate(spectrogramItem, spectrogramItem.transform.parent);
-            item.Init(capacity, blockSize);
+            item.Init(spectrogramSize, blockSize);
             item.gameObject.SetActive(true);
             spectrogramItems[i] = item;
         }
@@ -47,15 +47,19 @@ public class EMGSpectrogram : MonoBehaviour
 
         void AddFFT()
         {
-            Complex[] fftResult = FFTGenerator.FFT(emgDatas, 0, emgDatas.Length - 1);
+            Complex[] fftResultRaw = FFTGenerator.FFT(emgDatas, 0, emgDatas.Length - 1);
+            int centerID = fftResultRaw.Length - spectrogramSize;
+            Complex[] fftResult = fftResultRaw[centerID..];
             // Debug.Log($"amp min :{fftResult.Min(r => r.Magnitude)}" +
-                      // $" max : {fftResult.Max(r => r.Magnitude)}");
+            // $" max : {fftResult.Max(r => r.Magnitude)}");
+            
             itemDatas.Enqueue(fftResult);
             if (itemDatas.Count > spectrogramItems.Length)
             {
                 itemDatas.Dequeue();
             }
         }
+
         AddFFT();
 
         void UpdateItems()
@@ -69,10 +73,10 @@ public class EMGSpectrogram : MonoBehaviour
                 itemID++;
             }
         }
-        UpdateItems();
 
+        UpdateItems();
     }
-    
+
     double[] GetEMGDatas()
     {
         Queue<int> _emgDatas = new Queue<int>(emgSo.datas);
@@ -81,6 +85,7 @@ public class EMGSpectrogram : MonoBehaviour
         {
             emgDatas[i] = _emgDatas.Dequeue();
         }
+
         return emgDatas;
     }
 }
