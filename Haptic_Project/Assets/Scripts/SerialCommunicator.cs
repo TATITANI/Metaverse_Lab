@@ -33,23 +33,18 @@ public class SerialCommunicator : MonoBehaviour
             if (helper.isDevicePaired())
             {
                 helper.Connect();
+                Debug.Log("BT is Paired");
             }
 
          
         }catch(BluetoothHelper.BlueToothNotEnabledException ex) { }
         
-        StartCoroutine(Send());
+        //StartCoroutine(Send());
     }
 
 
     IEnumerator Send()
     {
-        while (!helper.Available)
-        {
-            yield return null;
-        }
-        
-        Debug.Log("Bluetooth is available");
         while (true)
         {
             int pressure1 = (int)handControllerSo.pressureRight[0].fingerPressure;
@@ -68,18 +63,23 @@ public class SerialCommunicator : MonoBehaviour
         {
             BTsend("E");
         }
-        if(IsDataReceived == true){
-            UpdateReceivedData();
+        // if(IsDataReceived == true){
+        //     UpdateReceivedData();
             
-            // todo : ¼ö½Å emg °ª ÀÔ·ÂÇÏ±â
-            // emgSO.PushData(emg);
-        }
+        //     // todo : ï¿½ï¿½ï¿½ï¿½ emg ï¿½ï¿½ ï¿½Ô·ï¿½ï¿½Ï±ï¿½
+        //     // emgSO.PushData(emg);
+        // }
 
         if (helper.Available)
         {
             string msg = helper.Read();
             Debug.Log(msg);
         }
+        // else{
+        //     //Debug.Log("helper.Available is false");
+        //     string msg = helper.Read();
+        //     Debug.Log(helper.Read());
+        // }
     }
     public void SendData_Btn(string data ){
         data = inputText.text;
