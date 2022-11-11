@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -23,6 +24,9 @@ public class EMGVisualizer : MonoBehaviour
 
     private Vector2 graphSize;
     private float valueNormalized;
+
+    [SerializeField] bool isTest = false;
+
     private void Awake()
     {
         emgSO.RegisterOnChangedEvent(Draw);
@@ -37,7 +41,7 @@ public class EMGVisualizer : MonoBehaviour
         // (spacing + line_width) * 개수 = bg_width 
         // => spacing = bg_width/개수 - line_width
         horLayoutGroup.spacing = graphSize.x / emgSO.capacity - trfVerticalLine.sizeDelta.x;
-        
+
         points.Clear();
         trfVerticalLine.gameObject.SetActive(false);
         for (int i = 0; i < emgSO.capacity; i++)
@@ -46,7 +50,7 @@ public class EMGVisualizer : MonoBehaviour
             line.gameObject.SetActive(true);
             var point = line.GetComponentInChildren<RectTransform>().GetChild(0).GetComponent<RectTransform>();
             point.gameObject.SetActive(false);
-            points.Add(point); 
+            points.Add(point);
         }
 
         trfLine.gameObject.SetActive(false);
@@ -55,8 +59,11 @@ public class EMGVisualizer : MonoBehaviour
             RectTransform _trfLine = Instantiate(trfLine.gameObject, trfLine.parent).GetComponent<RectTransform>();
             lines.Add(_trfLine);
         }
-        
-        StartCoroutine(PushDatas_Test());
+
+        if (isTest)
+        {
+            StartCoroutine(PushDatas_Test());
+        }
     }
 
     void Draw()
@@ -64,7 +71,7 @@ public class EMGVisualizer : MonoBehaviour
         Queue<int> _datas = new Queue<int>(emgSO.datas);
 
         int dataCnt = _datas.Count;
-        int pointID = points.Count-dataCnt;
+        int pointID = points.Count - dataCnt;
         int value;
         while (_datas.TryPeek(out value))
         {
@@ -74,7 +81,7 @@ public class EMGVisualizer : MonoBehaviour
 
             void DrawLine()
             {
-                Vector2 startPos = points[pointID-1].position;
+                Vector2 startPos = points[pointID - 1].position;
                 Vector2 endPos = points[pointID].position;
                 Vector2 dir = (endPos - startPos).normalized;
                 float distance = Vector2.Distance(startPos, endPos);
@@ -86,6 +93,7 @@ public class EMGVisualizer : MonoBehaviour
                 lines[lineID].eulerAngles = new Vector3(0, 0, angle);
                 lines[lineID].gameObject.SetActive(true);
             }
+
             if (pointID > points.Count - dataCnt)
             {
                 DrawLine();
@@ -101,11 +109,16 @@ public class EMGVisualizer : MonoBehaviour
         int[] testDatas =
         {
             289, 36, 81, 25, 121, 324, 36, 16, 25, 9, 121, 9, 289, 225, 16, 64, 25, 1, 25, 4, 9, 25, 0, 36, 49, 121, 1,
-            1, 25, 25, 484, 9, 324, 36, 100, 256, 49, 100, 196, 1, 4, 0, 25, 81, 25, 121, 1, 4, 49, 25, 9, 4, 16, 0, 4, 4,
-            9, 121, 100, 25, 25, 4, 0, 36, 0, 25, 16, 81, 36, 1, 81, 225, 25, 9, 81, 144, 81, 16, 36, 16, 36, 64, 36, 169,
-            256, 1, 16, 1, 25, 144, 1, 25, 9, 16, 4, 0, 64, 16, 16, 16, 4, 1, 49, 16, 49, 4, 25, 144, 49, 144, 121, 0, 1, 1,
-            4, 36, 16, 49, 1, 25, 36, 1, 49, 16, 144, 0, 9, 25, 36, 64, 100, 4, 0, 4, 9, 36, 9, 36, 0, 0, 1, 4, 36, 9, 144,
-            16, 0, 36, 49, 49, 49, 4, 0, 4, 1, 16, 25, 49, 1, 1, 4, 0, 81, 0, 36, 36, 100, 0, 4, 144, 25, 81, 9, 1, 4, 36,
+            1, 25, 25, 484, 9, 324, 36, 100, 256, 49, 100, 196, 1, 4, 0, 25, 81, 25, 121, 1, 4, 49, 25, 9, 4, 16, 0, 4,
+            4,
+            9, 121, 100, 25, 25, 4, 0, 36, 0, 25, 16, 81, 36, 1, 81, 225, 25, 9, 81, 144, 81, 16, 36, 16, 36, 64, 36,
+            169,
+            256, 1, 16, 1, 25, 144, 1, 25, 9, 16, 4, 0, 64, 16, 16, 16, 4, 1, 49, 16, 49, 4, 25, 144, 49, 144, 121, 0,
+            1, 1,
+            4, 36, 16, 49, 1, 25, 36, 1, 49, 16, 144, 0, 9, 25, 36, 64, 100, 4, 0, 4, 9, 36, 9, 36, 0, 0, 1, 4, 36, 9,
+            144,
+            16, 0, 36, 49, 49, 49, 4, 0, 4, 1, 16, 25, 49, 1, 1, 4, 0, 81, 0, 36, 36, 100, 0, 4, 144, 25, 81, 9, 1, 4,
+            36,
             25, 36, 49, 16
         };
 

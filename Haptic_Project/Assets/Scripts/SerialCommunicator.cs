@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,7 +25,7 @@ public class SerialCommunicator : MonoBehaviour
             helper = BluetoothHelper.GetInstance(deviceName);
             helper.OnConnected += OnConnected;
             helper.OnConnectionFailed += OnConnFailed;
-            
+
             helper.setTerminatorBasedStream("\n");
 
             if (helper.isDevicePaired())
@@ -32,23 +33,26 @@ public class SerialCommunicator : MonoBehaviour
                 helper.Connect();
                 Debug.Log("BT is Paired");
             }
+        }
+        catch (BluetoothHelper.BlueToothNotEnabledException ex)
+        {
+        }
 
-         
-        }catch(BluetoothHelper.BlueToothNotEnabledException ex) { }
-        
         StartCoroutine(Send());
     }
 
 
     IEnumerator Send()
     {
+        yield return new WaitUntil(() => helper.isConnected());
+
         while (true)
         {
             int pressure1 = (int)handControllerSo.pressureRight[0].fingerPressure;
             int pressure2 = (int)handControllerSo.pressureRight[1].fingerPressure;
             int pressure3 = (int)handControllerSo.pressureRight[2].fingerPressure;
             string msg = $"{pressure1},{pressure2},{pressure3}";
-            helper.SendData(msg);
+            BTsend(msg);
             yield return new WaitForSeconds(0.01f);
         }
     }
@@ -56,33 +60,31 @@ public class SerialCommunicator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.UpArrow))
-        {
-            BTsend("E");
-        }
-    
         if (helper.Available)
         {
             string msg = helper.Read();
-            Debug.Log(msg);
-            
-            //     UpdateReceivedData();
-            
-            //     // todo : emg data 입력
-            //     // emgSO.PushData(emg);
+            string[] emgDatas = msg.Split(',');
+            int grabEmg = Convert.ToInt32(emgDatas[0]);
+            int pickEmg = Convert.ToInt32(emgDatas[1]);
+            Debug.Log($"recv grabEmg : {grabEmg} / pickEmg : {pickEmg}");
+            emgSO.PushData(grabEmg);
         }
-      
     }
-    public void SendData_Btn(string data ){
+
+    public void SendData_Btn(string data)
+    {
         data = inputText.text;
         BTsend(data);
     }
 
-    private void BTsend(string data){
+    private void BTsend(string data)
+    {
         helper.SendData(data);
     }
-    private void UpdateReceivedData(){
-        receivedText.text=inputText.text;
+
+    private void UpdateReceivedData()
+    {
+        receivedText.text = inputText.text;
     }
 
     void OnConnected()
