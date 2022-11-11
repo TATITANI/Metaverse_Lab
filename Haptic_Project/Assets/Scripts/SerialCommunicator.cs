@@ -15,9 +15,6 @@ public class SerialCommunicator : MonoBehaviour
     [SerializeField] private HandControllerSO handControllerSo;
     [SerializeField] private EMG_SO emgSO;
 
-
-    public bool IsDataReceived =true;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -39,7 +36,7 @@ public class SerialCommunicator : MonoBehaviour
          
         }catch(BluetoothHelper.BlueToothNotEnabledException ex) { }
         
-        //StartCoroutine(Send());
+        StartCoroutine(Send());
     }
 
 
@@ -63,23 +60,18 @@ public class SerialCommunicator : MonoBehaviour
         {
             BTsend("E");
         }
-        // if(IsDataReceived == true){
-        //     UpdateReceivedData();
-            
-        //     // todo : ���� emg �� �Է��ϱ�
-        //     // emgSO.PushData(emg);
-        // }
-
+    
         if (helper.Available)
         {
             string msg = helper.Read();
             Debug.Log(msg);
+            
+            //     UpdateReceivedData();
+            
+            //     // todo : emg data 입력
+            //     // emgSO.PushData(emg);
         }
-        // else{
-        //     //Debug.Log("helper.Available is false");
-        //     string msg = helper.Read();
-        //     Debug.Log(helper.Read());
-        // }
+      
     }
     public void SendData_Btn(string data ){
         data = inputText.text;
