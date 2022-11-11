@@ -44,6 +44,12 @@ public class SerialCommunicator : MonoBehaviour
 
     IEnumerator Send()
     {
+        while (!helper.Available)
+        {
+            yield return null;
+        }
+        
+        Debug.Log("Bluetooth is available");
         while (true)
         {
             int pressure1 = (int)handControllerSo.pressureRight[0].fingerPressure;
