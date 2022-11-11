@@ -1,13 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 public class EMGVisualizer : MonoBehaviour
 {
@@ -24,8 +20,6 @@ public class EMGVisualizer : MonoBehaviour
 
     private Vector2 graphSize;
     private float valueNormalized;
-
-    [SerializeField] bool isTest = false;
 
     private void Awake()
     {
@@ -60,7 +54,7 @@ public class EMGVisualizer : MonoBehaviour
             lines.Add(_trfLine);
         }
 
-        if (isTest)
+        if (AppManager.Instance.IsTest)
         {
             StartCoroutine(PushDatas_Test());
         }

@@ -38,7 +38,10 @@ public class SerialCommunicator : MonoBehaviour
         {
         }
 
-        StartCoroutine(Send());
+        if (!AppManager.Instance.IsTest)
+        {
+            StartCoroutine(Send());
+        }
     }
 
 
