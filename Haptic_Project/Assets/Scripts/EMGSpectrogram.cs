@@ -17,6 +17,7 @@ public class EMGSpectrogram : MonoBehaviour
 
     private Queue<Complex[]> itemDatas;
     private int spectrogramSize;
+    [SerializeField] private EMG_SO.EMGType emgType;
     private void Awake()
     {
         spectrogramSize = Mathf.CeilToInt(emgSo.capacity/2);
@@ -38,9 +39,9 @@ public class EMGSpectrogram : MonoBehaviour
         itemDatas = new Queue<Complex[]>();
     }
 
-    void UpdateData()
+    void UpdateData(EMG_SO.EMGType _emgType)
     {
-        if (emgSo.datas.Count < emgSo.capacity)
+        if (emgSo.emgDatas[EMG_SO.EMGType.GRAB].Count < emgSo.capacity)
             return;
 
         double[] emgDatas = GetEMGDatas();
@@ -79,7 +80,7 @@ public class EMGSpectrogram : MonoBehaviour
 
     double[] GetEMGDatas()
     {
-        Queue<int> _emgDatas = new Queue<int>(emgSo.datas);
+        Queue<int> _emgDatas = new Queue<int>(emgSo.emgDatas[this.emgType]);
         double[] emgDatas = new double[_emgDatas.Count];
         for (int i = 0; i < emgDatas.Length; i++)
         {
