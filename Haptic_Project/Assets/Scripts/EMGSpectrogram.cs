@@ -3,24 +3,30 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Vector2 = UnityEngine.Vector2;
 
 public class EMGSpectrogram : MonoBehaviour
 {
+    [SerializeField] private EMG_SO.EMGType emgType;
+
+    [SerializeField] private EMG_SO emgSo;
     [SerializeField] SpectrogramItem spectrogramItem;
     [SerializeField] SpectrogramItem[] spectrogramItems;
     [SerializeField] private HorizontalLayoutGroup horLayoutGroup;
     [SerializeField] private Vector2 blockSize;
-    [SerializeField] private EMG_SO emgSo;
-
+    [SerializeField] private RawImage imgColor;
+    [SerializeField] private TextMeshProUGUI txtTitle;
+    [SerializeField] [Range(0, 1)] private float maxHue = 0.6f; // blue
     private Queue<Complex[]> itemDatas;
     private int spectrogramSize;
-    [SerializeField] private EMG_SO.EMGType emgType;
+
+
     private void Awake()
     {
-        spectrogramSize = Mathf.CeilToInt(emgSo.capacity/2);
+        spectrogramSize = Mathf.CeilToInt(emgSo.capacity / 2);
         horLayoutGroup.GetComponent<RectTransform>().sizeDelta =
             blockSize * spectrogramSize;
 
@@ -30,17 +36,45 @@ public class EMGSpectrogram : MonoBehaviour
         {
             SpectrogramItem item =
                 Instantiate(spectrogramItem, spectrogramItem.transform.parent);
-            item.Init(spectrogramSize, blockSize);
+            item.Init(spectrogramSize, blockSize,maxHue);
             item.gameObject.SetActive(true);
             spectrogramItems[i] = item;
         }
 
         emgSo.RegisterOnChangedEvent(UpdateData);
         itemDatas = new Queue<Complex[]>();
+
+        txtTitle.text = $"Spectrogram - {emgType.ToString()}";
+        InitColorMap();
+    }
+
+    void InitColorMap()
+    {
+        Vector2 size = imgColor.GetComponent<RectTransform>().sizeDelta;
+        Texture2D tex = new Texture2D((int)size.x, (int)size.y);
+
+        float dH = maxHue / size.y;
+        float h = 0;
+        for (int y = (int)size.y-1; y >= 0; y--)
+        {
+            Color color = Color.HSVToRGB(h, 1, 1);
+            for (int x = 0; x < size.x; x++)
+            {
+                tex.SetPixel(x, y, color);
+            }
+            h += dH;
+            h = Mathf.Clamp(h, 0, maxHue);
+        }
+
+        tex.Apply();
+        imgColor.material.mainTexture = tex;
     }
 
     void UpdateData(EMG_SO.EMGType _emgType)
     {
+        if (emgType != _emgType)
+            return;
+
         if (emgSo.emgDatas[EMG_SO.EMGType.GRAB].Count < emgSo.capacity)
             return;
 
@@ -51,9 +85,17 @@ public class EMGSpectrogram : MonoBehaviour
             Complex[] fftResultRaw = FFTGenerator.FFT(emgDatas, 0, emgDatas.Length - 1);
             int centerID = fftResultRaw.Length - spectrogramSize;
             Complex[] fftResult = fftResultRaw[centerID..];
+        
             // Debug.Log($"amp min :{fftResult.Min(r => r.Magnitude)}" +
             // $" max : {fftResult.Max(r => r.Magnitude)}");
-            
+
+            // string strFFT = "";
+            // foreach (var complex in fftResult)
+            // {
+            //     strFFT += $"{complex.Magnitude},";
+            // }
+            // Debug.Log($"FFT : {strFFT}");
+
             itemDatas.Enqueue(fftResult);
             if (itemDatas.Count > spectrogramItems.Length)
             {

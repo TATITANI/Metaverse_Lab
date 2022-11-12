@@ -13,11 +13,12 @@ public class SpectrogramItem : MonoBehaviour
     [SerializeField] private Image imgBlock;
     [SerializeField] private Image[] imgBlocks;
     public Complex[] datas { get; private set; }
-
-    public void Init(int blockCnt, Vector2 blockSize)
+    private float maxHue;
+    public void Init(int blockCnt, Vector2 blockSize, float _maxHue)
     {
         imgBlock.gameObject.SetActive(false);
         imgBlocks = new Image[blockCnt];
+        maxHue = _maxHue;
         for (int i = 0; i < blockCnt; i++)
         {
             Image img = i == 0 ? imgBlock : Instantiate(imgBlock, imgBlock.transform.parent);
@@ -25,6 +26,7 @@ public class SpectrogramItem : MonoBehaviour
             img.GetComponent<RectTransform>().sizeDelta = blockSize;
             img.gameObject.SetActive(true);
             imgBlocks[i] = img;
+            imgBlocks[i].color = Color.HSVToRGB(maxHue,1,1);
         }
     }
 
@@ -39,10 +41,9 @@ public class SpectrogramItem : MonoBehaviour
 
         for (int i = 0; i < datas.Length; i++)
         {
-            const float blue = 0.66f;
             float dBMagnitude = 10 * Mathf.Log10((float)datas[i].Magnitude);
             float normalizedMag = (dBMagnitude+1) * 0.02f; // 0~1
-            float h = Mathf.Clamp(blue - normalizedMag, 0, blue); // amplitude 낮을수록 파랑
+            float h = Mathf.Clamp(maxHue - normalizedMag, 0, maxHue); // amplitude 낮을수록 파랑
             imgBlocks[i].color = Color.HSVToRGB(h,1,1);
             
             // Debug.Log($"{dBMagnitude} / {normalizedMag}");

@@ -25,9 +25,14 @@ public class AppManager : MonoBehaviour
     }
 
     [SerializeField] private bool isTest;
+    [SerializeField] private int targetFrame = 60;
     public bool IsTest
     {
         get { return isTest; }
     }
-    
+
+    private void Awake()
+    {
+        Application.targetFrameRate = targetFrame;
+    }
 }
