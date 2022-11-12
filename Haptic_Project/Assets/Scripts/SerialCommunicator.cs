@@ -45,13 +45,16 @@ public class SerialCommunicator : MonoBehaviour
         }
         finally
         {
-            this.enabled = false;
+            gameObject.SetActive(false);
         }
 
-        if (!AppManager.Instance.IsTest)
+        if (AppManager.Instance.IsTest)
         {
-            StartCoroutine(Send());
+            gameObject.SetActive(false);
+            return;
         }
+
+        StartCoroutine(Send());
     }
 
 
