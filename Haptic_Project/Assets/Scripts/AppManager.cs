@@ -7,6 +7,7 @@ using UnityEngine.Events;
 public class AppManager : MonoBehaviour
 {
     private static AppManager _instance;
+
     public static AppManager Instance
     {
         get
@@ -18,14 +19,15 @@ public class AppManager : MonoBehaviour
                 GameObject container = new GameObject("AppManager");
                 _instance = container.AddComponent<AppManager>();
             }
+
             return _instance;
         }
     }
 
-    public HandController handController;
-    
-    private void Awake()
+    [SerializeField] private bool isTest;
+    public bool IsTest
     {
-        
+        get { return isTest; }
     }
+    
 }

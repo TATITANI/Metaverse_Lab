@@ -38,7 +38,10 @@ public class SerialCommunicator : MonoBehaviour
         {
         }
 
-        StartCoroutine(Send());
+        if (!AppManager.Instance.IsTest)
+        {
+            StartCoroutine(Send());
+        }
     }
 
 
@@ -67,7 +70,8 @@ public class SerialCommunicator : MonoBehaviour
             int grabEmg = Convert.ToInt32(emgDatas[0]);
             int pickEmg = Convert.ToInt32(emgDatas[1]);
             Debug.Log($"recv grabEmg : {grabEmg} / pickEmg : {pickEmg}");
-            emgSO.PushData(grabEmg);
+            emgSO.PushData(EMG_SO.EMGType.GRAB, grabEmg);
+            emgSO.PushData(EMG_SO.EMGType.PICK, pickEmg);
         }
     }
 
