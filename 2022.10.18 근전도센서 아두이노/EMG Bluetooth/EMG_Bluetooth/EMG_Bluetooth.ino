@@ -75,15 +75,16 @@ void setup() {
 void loop() {
   if(mySerial.available()) //receive data through bluetooth
   {
-    int value1 = mySerial.parseInt();
-    int value2 = mySerial.parseInt();
-    int value3 = mySerial.parseInt();
-    Serial.write("value 1 : ");
-    Serial.println(value1);
-    Serial.write("value 2 : ");
-    Serial.println(value2);
-    Serial.write("value 3 : ");
-    Serial.println(value3);
+    Serial.write(mySerial.read());
+    //int value1 = mySerial.parseInt();
+    //int value2 = mySerial.parseInt();
+    //int value3 = mySerial.parseInt();
+    //Serial.write("value 1 : ");
+    //Serial.println(value1);
+    //Serial.write("value 2 : ");
+    //Serial.println(value2);
+    //Serial.write("value 3 : ");
+    //Serial.println(value3);
     //parse string -> int
   }
   Serial.flush();
@@ -154,7 +155,7 @@ void loop() {
           count++;
           sum = sum + envlope;
           //Serial.println(a); 
-          mySerial.write(a);
+          mySerial.println(a);
           delete a;
         }
         
