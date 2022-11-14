@@ -24,12 +24,16 @@ public class UImanager : MonoBehaviour
     float Contents_TimeStart;
     float Task_TimeStart;
 
-    float EMG_Contents_Grab; //팔뚝 EMG 현재 센싱 값 / 아두이노에서 받아오기 
-    float EMG_Contents_Pickup; //손등 EMG 현재 센싱 값 / 아두이노에서 받아오기 
+    public float EMG_Contents_Grab; //팔뚝 EMG 현재 센싱 값 / 아두이노에서 받아오기 
+    public float EMG_Contents_Pickup; //손등 EMG 현재 센싱 값 / 아두이노에서 받아오기 
+
+    public float GrabThreshold = 500;
+    public float PickupThreshold = 500;
 
 
-    float EMG_Task_Grab; //팔뚝 EMG 현재 센싱 값 / 아두이노에서 받아오기 
-    float EMG_Task_Pickup; //손등 EMG 현재 센싱 값 / 아두이노에서 받아오기 
+
+    public float EMG_Task_Grab; //팔뚝 EMG 현재 센싱 값 / 아두이노에서 받아오기 
+    public float EMG_Task_Pickup; //손등 EMG 현재 센싱 값 / 아두이노에서 받아오기 
 
     int EMG_Count_Grab_Contents=0; //EMG 쥐는 동작 카운트 / 
     int EMG_Count_Pickup_Contents=0; //EMG 집는 동작 카운트 / 
@@ -151,15 +155,15 @@ public class UImanager : MonoBehaviour
                 Contents_count++;
 
 
-                EMG_Contents_Grab = Random.Range(0, 1500);
-                EMG_Contents_Pickup = Random.Range(0, 1500);
-                Content_Grab_EMGAvg = 0;
+                //EMG_Contents_Grab = Random.Range(0, 1500);
+                //EMG_Contents_Pickup = Random.Range(0, 1500);
+                //Content_Grab_EMGAvg = 0;
                 Text_Grab_EMG_Contents.text = EMG_Contents_Grab.ToString("F2");
                 Text_PickUp_EMG_Contents.text = EMG_Contents_Pickup.ToString("F2");
 
                 //합
                 Content_Grab_EMGSum += EMG_Contents_Grab;
-                Content_Pickup_EMGSum += EMG_Contents_Grab;
+                Content_Pickup_EMGSum += EMG_Contents_Pickup;
                 //평균
                 Content_Grab_EMGAvg = Content_Grab_EMGSum / Contents_count;
                 Content_Pickup_EMGAvg = Content_Pickup_EMGSum / Contents_count;
@@ -168,11 +172,11 @@ public class UImanager : MonoBehaviour
                 Text_PickUp_Avg_Contents.text = Content_Pickup_EMGAvg.ToString("F2");
 
 
-                if (EMG_Contents_Grab > 1200) //임계값
+                if (EMG_Contents_Grab > GrabThreshold) //임계값
                 {
                     EMG_Count_Grab_Contents++;
                 }
-                if (EMG_Contents_Pickup > 1400)
+                if (EMG_Contents_Pickup > PickupThreshold)
                 {
                     EMG_Count_Pickup_Contents++;
                 }
@@ -192,15 +196,15 @@ public class UImanager : MonoBehaviour
             {
                 Task_count++;
 
-                EMG_Task_Grab = Random.Range(0, 1500);
-                EMG_Task_Pickup = Random.Range(0, 1500);
-                Task_Grab_EMGAvg = 0;
+                // EMG_Task_Grab = Random.Range(0, 1500);
+                // EMG_Task_Pickup = Random.Range(0, 1500);
+                //Task_Grab_EMGAvg = 0;
                 Text_Grab_EMG_Task.text = EMG_Task_Grab.ToString("F2");
                 Text_PickUp_EMG_Task.text = EMG_Task_Pickup.ToString("F2");
 
                 //합
                 Task_Grab_EMGSum += EMG_Task_Grab;
-                Task_Pickup_EMGSum += EMG_Task_Grab;
+                Task_Pickup_EMGSum += EMG_Task_Pickup;
                 //평균
                 Task_Grab_EMGAvg = Task_Grab_EMGSum / Task_count;
                 Task_Pickup_EMGAvg = Task_Pickup_EMGSum / Task_count;
@@ -208,11 +212,11 @@ public class UImanager : MonoBehaviour
                 Text_Grab_Avg_Task.text = Task_Grab_EMGAvg.ToString("F2");
                 Text_PickUp_Avg_Task.text = Task_Pickup_EMGAvg.ToString("F2");
 
-                if (EMG_Task_Grab > 1200) //임계값
+                if (EMG_Task_Grab > GrabThreshold) //임계값
                 {
                     EMG_Count_Grab_Task++;
                 }
-                if (EMG_Task_Pickup > 1400)
+                if (EMG_Task_Pickup > PickupThreshold)
                 {
                     EMG_Count_Pickup_Task++;
                 }
