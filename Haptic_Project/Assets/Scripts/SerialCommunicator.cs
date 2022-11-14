@@ -36,12 +36,25 @@ public class SerialCommunicator : MonoBehaviour
         }
         catch (BluetoothHelper.BlueToothNotEnabledException ex)
         {
+            Debug.LogError($"BlueToothNotEnabledException : {ex.Message}");
+            this.enabled = false;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"bt error : {e.Message}");
+        }
+        finally
+        {
+            gameObject.SetActive(false);
         }
 
-        if (!AppManager.Instance.IsTest)
+        if (AppManager.Instance.IsTest)
         {
-            StartCoroutine(Send());
+            gameObject.SetActive(false);
+            return;
         }
+
+        StartCoroutine(Send());
     }
 
 
