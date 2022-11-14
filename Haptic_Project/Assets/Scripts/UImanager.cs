@@ -62,6 +62,9 @@ public class UImanager : MonoBehaviour
 
     bool IsThereAnyValueToRead = true;
 
+    bool StopGrabCount=false;
+    bool StopPickupCount=false;
+
 
     [SerializeField] TextMeshProUGUI Text_ContentsTimer, Text_TaskTimer, Contents_startPauseText, Task_startPauseText;
     [SerializeField] TextMeshProUGUI EMG_startPauseText;
@@ -172,13 +175,17 @@ public class UImanager : MonoBehaviour
                 Text_PickUp_Avg_Contents.text = Content_Pickup_EMGAvg.ToString("F2");
 
 
-                if (EMG_Contents_Grab > GrabThreshold) //임계값
+                if (EMG_Contents_Grab > GrabThreshold && !StopGrabCount) //임계값보다 크고 충분히 시간이 지난 후 다시 카운팅
                 {
                     EMG_Count_Grab_Contents++;
+                    StopGrabCount= true;
+                    StartCoroutine("DelayGrabCounting");
                 }
-                if (EMG_Contents_Pickup > PickupThreshold)
+                if (EMG_Contents_Pickup > PickupThreshold && !StopPickupCount)
                 {
                     EMG_Count_Pickup_Contents++;
+                    StopPickupCount=true;
+                    StartCoroutine("DelayPickupCounting");
                 }
                 Text_Grab_Count_Contents.text = EMG_Count_Grab_Contents.ToString();
                 Text_PickUp_Count_Contents.text = EMG_Count_Pickup_Contents.ToString();
@@ -212,11 +219,11 @@ public class UImanager : MonoBehaviour
                 Text_Grab_Avg_Task.text = Task_Grab_EMGAvg.ToString("F2");
                 Text_PickUp_Avg_Task.text = Task_Pickup_EMGAvg.ToString("F2");
 
-                if (EMG_Task_Grab > GrabThreshold) //임계값
+                if (EMG_Task_Grab > GrabThreshold && !StopGrabCount) //임계값
                 {
                     EMG_Count_Grab_Task++;
                 }
-                if (EMG_Task_Pickup > PickupThreshold)
+                if (EMG_Task_Pickup > PickupThreshold && !StopPickupCount)
                 {
                     EMG_Count_Pickup_Task++;
                 }
@@ -302,6 +309,15 @@ public class UImanager : MonoBehaviour
          listPressureUI[id].SetState(pressure);
      }
 
-
+    IEnumerator DelayGrabCounting()
+    {
+        yield return new WaitForSecondsRealtime(0.3f);
+        StopGrabCount=false;
+    }
+        IEnumerator DelayPickupCounting()
+    {
+        yield return new WaitForSecondsRealtime(0.3f);
+        StopPickupCount=false;
+    }
 
 }
