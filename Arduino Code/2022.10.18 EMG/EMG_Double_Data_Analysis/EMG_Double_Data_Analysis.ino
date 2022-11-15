@@ -80,7 +80,7 @@ void setup() {
     myFilter.init(sampleRate, humFreq, true, true, true);
 
     // open serial
-    Serial.begin(9600);
+    Serial.begin(115200);
     Serial.println("envlope,envlope_1");
 
     // setup for time cost measure
@@ -88,8 +88,8 @@ void setup() {
     timeBudget = 1e6 / sampleRate;
     // micros will overflow and auto return to zero every 70 minutes
 
-    Serial.println("CLEARDATA");
-    Serial.println("LABEL,Time,Timer, EMG,EMG_1,T");//, Counting,timeMillis
+    //Serial.println("CLEARDATA");
+    //Serial.println("LABEL,Time,Timer, EMG,EMG_1,T");//, Counting,timeMillis
     
     timeMillis=0;
     startMillis = millis();
@@ -126,7 +126,7 @@ void loop() {
         //Serial.println(0);
         //if(envlope !=0 && envlope<Threshold_Max){
         if(envlope<Threshold_Max || envlope_1<Threshold_Max_1){ 
-          Serial.print("DATA,TIME,TIMER,");
+          //Serial.print("DATA,TIME,TIMER,");
           //Serial.print(millis()*0.001);
           //Serial.print(",");
           //Serial.print("Squared Data: ");
@@ -136,13 +136,13 @@ void loop() {
           Serial.print(envlope);
           Serial.print(", ");
 
-          Serial.print(envlope_1);
+          //Serial.print(envlope_1);
           //Serial.print(", ");
           
           //Serial.print(millis()*0.001);
-          Serial.println(",");
+          //Serial.println(",");
           //Serial.println("envlope_1 : ");
-          //Serial.println(envlope_1);
+          Serial.println(envlope_1);
          
           delay(200); //excel 
           if(maxEMG<envlope){
