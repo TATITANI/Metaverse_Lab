@@ -51,6 +51,8 @@ public class UImanager : MonoBehaviour
     float Task_Grab_EMGSum = 0;
     float Task_Pickup_EMGSum = 0;
 
+    float Task_Grab_EMGMax = 0;
+    float Task_Pickup_EMGMax = 0;
 
     int Contents_count =0;
     int Task_count = 0;
@@ -215,6 +217,11 @@ public class UImanager : MonoBehaviour
                 //평균
                 Task_Grab_EMGAvg = Task_Grab_EMGSum / Task_count;
                 Task_Pickup_EMGAvg = Task_Pickup_EMGSum / Task_count;
+                //최대값
+                if (Task_Grab_EMGMax < EMG_Task_Grab) Task_Grab_EMGMax = EMG_Task_Grab;
+                if (Task_Pickup_EMGMax < EMG_Task_Pickup) Task_Pickup_EMGMax = EMG_Task_Pickup;
+
+                
 
                 Text_Grab_Avg_Task.text = Task_Grab_EMGAvg.ToString("F2");
                 Text_PickUp_Avg_Task.text = Task_Pickup_EMGAvg.ToString("F2");
@@ -227,8 +234,9 @@ public class UImanager : MonoBehaviour
                 {
                     EMG_Count_Pickup_Task++;
                 }
-                Text_Grab_Count_Task.text = EMG_Count_Grab_Task.ToString();
-                Text_PickUp_Count_Task.text = EMG_Count_Pickup_Task.ToString();
+                //카운트 대신 최대값 출력 테스트
+                Text_Grab_Count_Task.text = Task_Grab_EMGMax.ToString();
+                Text_PickUp_Count_Task.text = Task_Pickup_EMGMax.ToString();
             }
 
             
@@ -272,8 +280,13 @@ public class UImanager : MonoBehaviour
 
         Task_Grab_EMGAvg = 0f;
         Task_Pickup_EMGAvg = 0f;
-        Text_Grab_Avg_Task.text = Task_Grab_EMGAvg.ToString("F2");
-        Text_PickUp_Avg_Task.text = Task_Pickup_EMGAvg.ToString("F2");
+        //Text_Grab_Avg_Task.text = Task_Grab_EMGAvg.ToString("F2");
+        //Text_PickUp_Avg_Task.text = Task_Pickup_EMGAvg.ToString("F2");
+
+        Task_Grab_EMGMax = 0f;
+        Task_Pickup_EMGMax = 0f;
+        Text_Grab_Count_Task.text = Task_Grab_EMGMax.ToString();
+        Text_PickUp_Count_Task.text = Task_Pickup_EMGMax.ToString();
     }
 
     public void EMG_StartPauseBtn()
