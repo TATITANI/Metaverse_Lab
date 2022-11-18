@@ -70,7 +70,7 @@ public class EMGSpectrogram : MonoBehaviour
         imgColor.material.mainTexture = tex;
     }
 
-    void UpdateData(EMG_SO.EMGType _emgType)
+    void UpdateData(EMG_SO.EMGType _emgType, int emg)
     {
         if (emgType != _emgType)
             return;

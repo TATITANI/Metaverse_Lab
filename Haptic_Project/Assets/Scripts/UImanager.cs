@@ -148,7 +148,7 @@ public class UImanager : MonoBehaviour
         }
     }
 
-    void EMG_Contents_StartEMG(EMG_SO.EMGType _emgType)
+    void EMG_Contents_StartEMG(EMG_SO.EMGType _emgType, int emg)
     {
         //추후 아두이노에서 EMG를 받아오는 함수로 변경
         if (EMG_Contents_Active)
@@ -158,7 +158,7 @@ public class UImanager : MonoBehaviour
             switch (_emgType)
             {
                 case EMG_SO.EMGType.GRAB:
-                    EMG_Contents_Grab = emgSO.emgDatas[_emgType].Peek();
+                    EMG_Contents_Grab = emg;
 
                     //합
                     Content_Grab_EMGSum += EMG_Contents_Grab;
@@ -198,7 +198,7 @@ public class UImanager : MonoBehaviour
         }
     }
 
-    void EMG_Task_StartEMG(EMG_SO.EMGType _emgType)
+    void EMG_Task_StartEMG(EMG_SO.EMGType _emgType, int emg)
     {
         //추후 아두이노에서 EMG를 받아오는 함수로 변경
         if (EMG_Task_Active)
@@ -207,8 +207,8 @@ public class UImanager : MonoBehaviour
             switch (_emgType)
             {
                 case EMG_SO.EMGType.GRAB:
-                    EMG_Task_Grab = emgSO.emgDatas[_emgType].Peek();
-
+                    EMG_Task_Grab = emg;
+                    
                     Text_Grab_EMG_Task.text = EMG_Task_Grab.ToString("F2");
                     //합
                     Task_Grab_EMGSum += EMG_Task_Grab;

@@ -94,7 +94,7 @@ public class EMGVisualizer : MonoBehaviour
         }
     }
 
-    void Draw(EMG_SO.EMGType emgType)
+    void Draw(EMG_SO.EMGType emgType, int emg)
     {
         Queue<int> _datas = new Queue<int>(emgSO.emgDatas[emgType]);
         List<RectTransform> points = emgElements[emgType].points;

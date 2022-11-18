@@ -19,7 +19,7 @@ public class EMG_SO : ScriptableObject
         = new Dictionary<EMGType, Queue<int>>();
 
     public int capacity { get; private set; } = 16;
-    private UnityEvent<EMGType> OnChangedEvent = new UnityEvent<EMGType>();
+    private UnityEvent<EMGType, int> OnChangedEvent = new UnityEvent<EMGType,int>();
 
     public void PushData(EMGType emgType, int _emg)
     {
@@ -34,21 +34,21 @@ public class EMG_SO : ScriptableObject
             emgDatas[emgType].Dequeue();
         }
 
-        ExecuteOnChangedEvents(emgType);
+        ExecuteOnChangedEvents(emgType, _emg);
     }
 
-    public void RegisterOnChangedEvent(UnityAction<EMGType> _action)
+    public void RegisterOnChangedEvent(UnityAction<EMGType, int> _action)
     {
         OnChangedEvent.AddListener(_action);
     }
 
-    public void UnRegisterOncChangedEvent(UnityAction<EMGType> _action)
+    public void UnRegisterOncChangedEvent(UnityAction<EMGType, int> _action)
     {
         OnChangedEvent.RemoveListener(_action);
     }
 
-    void ExecuteOnChangedEvents(EMGType emgType)
+    void ExecuteOnChangedEvents(EMGType emgType, int emg)
     {
-        OnChangedEvent.Invoke(emgType);
+        OnChangedEvent.Invoke(emgType, emg);
     }
 }
