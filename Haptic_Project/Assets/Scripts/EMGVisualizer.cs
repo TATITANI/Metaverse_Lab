@@ -167,13 +167,7 @@ public class EMGVisualizer : MonoBehaviour
             dataId = (dataId == dataSize - 1) ? 0 : dataId + 1;
             emgSO.PushData(EMG_SO.EMGType.GRAB, testGrabDatas[dataId]);//+UnityEngine.Random.Range(0, 100));
             emgSO.PushData(EMG_SO.EMGType.PICK, testPickDatas[dataId]);//+UnityEngine.Random.Range(0, 100));
-
-            UImanager.Instance.EMG_Contents_Grab =  testGrabDatas[dataId];
-            UImanager.Instance.EMG_Contents_Pickup =  testPickDatas[dataId];
-            
-            UImanager.Instance.EMG_Task_Grab =  testGrabDatas[dataId];
-            UImanager.Instance.EMG_Task_Pickup =  testPickDatas[dataId];
-
+           
             yield return new WaitForSeconds(0.1f);
         }
     }
