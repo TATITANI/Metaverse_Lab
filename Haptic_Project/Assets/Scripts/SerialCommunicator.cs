@@ -70,7 +70,7 @@ public class SerialCommunicator : MonoBehaviour
         }
         finally
         {
-            gameObject.SetActive(false);
+            // gameObject.SetActive(false);
         }
 
         if (AppManager.Instance.IsTest)
@@ -89,10 +89,11 @@ public class SerialCommunicator : MonoBehaviour
 
         while (true)
         {
-            int pressure1 = (int)handControllerSo.pressureRight[0].fingerPressure;
-            int pressure2 = (int)handControllerSo.pressureRight[1].fingerPressure;
-            int pressure3 = (int)handControllerSo.pressureRight[2].fingerPressure;
-            string msg = $"{pressure1},{pressure2},{pressure3}";
+            int pressure1 = (int)(handControllerSo.pressureRight[0].fingerPressure*100);
+            int pressure2 = (int)(handControllerSo.pressureRight[1].fingerPressure*100);
+            int pressure3 = (int)(handControllerSo.pressureRight[2].fingerPressure*100);
+            string msg = $"<{pressure1},{pressure2},{pressure3}>";
+            Debug.Log($"sendMsg : {msg}");
             BTsend(msg);
             yield return new WaitForSeconds(sampleTime);
         }
@@ -107,7 +108,7 @@ public class SerialCommunicator : MonoBehaviour
             string[] emgDatas = msg.Split(',');
             int grabEmg = Convert.ToInt32(emgDatas[0]);
             int pickEmg = Convert.ToInt32(emgDatas[1]);
-            Debug.Log($"recv grabEmg : {grabEmg} / pickEmg : {pickEmg}");
+            // Debug.Log($"recv grabEmg : {grabEmg} / pickEmg : {pickEmg}");
             emgSO.PushData(EMG_SO.EMGType.GRAB, grabEmg);
             emgSO.PushData(EMG_SO.EMGType.PICK, pickEmg);
         }
