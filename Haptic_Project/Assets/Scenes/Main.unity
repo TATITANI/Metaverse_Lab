@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.1762809, g: 0.22062759, b: 0.30295044, a: 1}
+  m_IndirectSpecularColor: {r: 0.1762811, g: 0.2206278, b: 0.30295098, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -927,7 +927,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc8123dec03b7334d8a85d9366b4efc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isTest: 0
+  isTest: 1
   targetFrame: 60
 --- !u!4 &529976289
 Transform:
@@ -944,17 +944,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &607841626 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3711800773552877096, guid: 04d37545839a8bc4c8fbaa14d656906a, type: 3}
-  m_PrefabInstance: {fileID: 8478663389663276939}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &752934441
 GameObject:
   m_ObjectHideFlags: 0
@@ -1810,17 +1799,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 025cc0fa7b46aa541aba29d28d35ac09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1231564239 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3711800774113955320, guid: 04d37545839a8bc4c8fbaa14d656906a, type: 3}
-  m_PrefabInstance: {fileID: 8478663389663276939}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1310776968
 GameObject:
   m_ObjectHideFlags: 0
@@ -2032,7 +2010,7 @@ PrefabInstance:
     - target: {fileID: 8755852228427102374, guid: fe2c8f6e8433c81478d59c9937ee6043, type: 3}
       propertyPath: inputText
       value: 
-      objectReference: {fileID: 1231564239}
+      objectReference: {fileID: 0}
     - target: {fileID: 8755852228427102374, guid: fe2c8f6e8433c81478d59c9937ee6043, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -2044,7 +2022,7 @@ PrefabInstance:
     - target: {fileID: 8755852228427102374, guid: fe2c8f6e8433c81478d59c9937ee6043, type: 3}
       propertyPath: receivedText
       value: 
-      objectReference: {fileID: 607841626}
+      objectReference: {fileID: 0}
     - target: {fileID: 8755852228427102375, guid: fe2c8f6e8433c81478d59c9937ee6043, type: 3}
       propertyPath: m_Name
       value: SerialCommunicator
@@ -6006,8 +5984,8 @@ MonoBehaviour:
     - {fileID: 4730859319494441710}
     - {fileID: 4730859319494441686}
     - {fileID: 4730859319494441672}
-  touchCheckingPosOffset: 0.01
-  pressCheckingDistance: 0.01
+  touchCheckingPosOffset: 0.05
+  pressCheckingDistance: 0.04
   touchRange: 2
 --- !u!4 &1942876626265615003 stripped
 Transform:

@@ -104,8 +104,10 @@ public class ElasticBody : MonoBehaviour
             velocities[i] += direction * velocity * Time.deltaTime;
         }
 
-        float pressure = (vertices[pressingVertexID] - initVertices[pressingVertexID]).sqrMagnitude 
+        float pressureOffset = 4f;
+        float pressure = pressureOffset * (vertices[pressingVertexID] - initVertices[pressingVertexID]).sqrMagnitude 
                          * elasticity / (initVertexSqrMag * maxElasticity );
+        pressure = Mathf.Clamp01(pressure);
         controllerSO.SetFingerPressure(fingerId, pressure);
     }
 

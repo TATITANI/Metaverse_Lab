@@ -19,7 +19,12 @@ public class EMG_SO : ScriptableObject
         = new Dictionary<EMGType, Queue<int>>();
 
     public int capacity { get; private set; } = 16;
-    private UnityEvent<EMGType, int> OnChangedEvent = new UnityEvent<EMGType,int>();
+    private UnityEvent<EMGType, int> OnChangedEvent = new UnityEvent<EMGType, int>();
+    [SerializeField] private int maxPeak = 300;
+    public int MaxPeak
+    {
+        get { return maxPeak; }
+    }
 
     public void PushData(EMGType emgType, int _emg)
     {
@@ -27,7 +32,9 @@ public class EMG_SO : ScriptableObject
         {
             emgDatas.Add(emgType, new Queue<int>());
         }
-        
+
+        _emg = Mathf.Clamp(_emg, 0, maxPeak);
+
         emgDatas[emgType].Enqueue(_emg);
         if (emgDatas[emgType].Count > capacity)
         {

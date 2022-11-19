@@ -34,7 +34,6 @@ public class EMGVisualizer : MonoBehaviour
     }
 
     [SerializeField] private EMG_SO emgSO;
-    [SerializeField] private int maxPeak = 300;
     [SerializeField] private TextMeshProUGUI txtPeak;
 
     [SerializeField] private RectTransform graphBG;
@@ -53,9 +52,9 @@ public class EMGVisualizer : MonoBehaviour
 
     void Start()
     {
-        txtPeak.text = $"{maxPeak}";
+        txtPeak.text = $"{emgSO.MaxPeak}";
         graphSize = graphBG.sizeDelta;
-        valueNormalized = graphSize.y / maxPeak;
+        valueNormalized = graphSize.y / emgSO.MaxPeak;
 
         var enumEmgValues = Enum.GetValues(typeof(EMG_SO.EMGType));
         foreach (var enumEmgValue in enumEmgValues)
@@ -106,7 +105,7 @@ public class EMGVisualizer : MonoBehaviour
         while (_datas.TryPeek(out value))
         {
             points[pointID].gameObject.SetActive(true);
-            float y = Mathf.Clamp(value * valueNormalized, 0, maxPeak);
+            float y = Mathf.Clamp(value * valueNormalized, 0, graphSize.y);
             points[pointID].anchoredPosition = new Vector2(points[pointID].anchoredPosition.x, y);
 
             void DrawLine()

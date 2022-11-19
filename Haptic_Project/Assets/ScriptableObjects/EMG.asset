@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29e4355b0c68f034c8a6b8a9992f9753, type: 3}
   m_Name: EMG
   m_EditorClassIdentifier: 
+  maxPeak: 800
