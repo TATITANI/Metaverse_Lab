@@ -28,7 +28,7 @@ public class MeshDeformer : MonoBehaviour
 
     private void Update()
     {
-        ProcessInput();
+        //ProcessInput();
         Restore();
         Flex();
         UpdateVertex();
@@ -107,7 +107,22 @@ public class MeshDeformer : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log($" collision - impulse :  {collision.impulse}," +
-                  $" relativeVelocity : {collision.relativeVelocity}");
+        //Debug.Log($" collision - impulse :  {collision.impulse}," +
+                //  $" relativeVelocity : {collision.relativeVelocity}");
+    }
+    void OnCollisionStay(Collision col)
+    {
+        Debug.Log(col.gameObject.name);
+        if (col.gameObject.name == "Grabber")
+        {
+            if (col.gameObject == this.gameObject)
+            {
+                // 직접 닿은 표면에 압력을 주기 위해서
+                // 충돌점으로부터 법선벡터 쪽으로 약간 올라간 좌표를 입력. 
+                const float hitPointOffset = 0.1f;
+                const float power = 1f;
+                Press(gameObject.transform.position, power);
+            }
+        }
     }
 }
