@@ -89,13 +89,14 @@ public class SerialCommunicator : MonoBehaviour
 
         while (true)
         {
-            int pressure1 = (int)(handControllerSo.pressureRight[0].fingerPressure*100);
-            int pressure2 = (int)(handControllerSo.pressureRight[1].fingerPressure*100);
-            int pressure3 = (int)(handControllerSo.pressureRight[2].fingerPressure*100);
+            int pressure1 = (int)(handControllerSo.pressureRight[0].fingerPressure * 100);
+            int pressure2 = (int)(handControllerSo.pressureRight[1].fingerPressure * 100);
+            int pressure3 = (int)(handControllerSo.pressureRight[2].fingerPressure * 100);
             string msg = $"<{pressure1},{pressure2},{pressure3}>";
             Debug.Log($"sendMsg : {msg}");
             BTsend(msg);
-            yield return new WaitForSeconds(sampleTime);
+            // yield return new WaitForSeconds(sampleTime);
+            yield return new WaitForSeconds(0.5f);
         }
     }
 
@@ -122,7 +123,14 @@ public class SerialCommunicator : MonoBehaviour
 
     private void BTsend(string data)
     {
-        helper.SendData(data);
+        if (helper.IsBluetoothEnabled())
+        {
+            helper.SendData(data);
+        }
+        else
+        {
+            Debug.LogWarning($"bluetooth is not enabled");
+        }
     }
 
     private void UpdateReceivedData()
