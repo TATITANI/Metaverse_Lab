@@ -9,7 +9,7 @@ int Poten_1_Threshold = 1023;
 int Poten_2_Threshold = 1023;
 int Poten_3_Threshold = 1023;
 
-int potenTest[3];
+int potenTest[3]={10,10,10};
 ////// 모터제어
 #include <Servo.h>  // 서보모터 라이브러리 포함
 
@@ -116,9 +116,12 @@ float Clamp(float value, float low, float high) {
   return value;
 }
 
+
 float Map(float currentValue, float currentStart, float currentEnd, float targetStart, float targetEnd) {
   float ratio = abs( (currentValue - currentStart) / (currentEnd - currentStart));
+
   float mappedValue = targetStart + ratio * (targetEnd - targetStart);
+  
   return mappedValue;
 }
 
@@ -126,7 +129,7 @@ float Map(float currentValue, float currentStart, float currentEnd, float target
 Servo servo[3];  // 서보모터를 배열로 정의
 unsigned long lastMotorUpdatedTime = 0;
 int testPressID = 0;
-bool isPress = false;
+bool isPress[3] = {false,false,false};
 int pressAngle; // 눌렀을 떄 최초 나사각도
 void MotorControl() {
 
@@ -137,13 +140,13 @@ void MotorControl() {
   int potentiometer_value[3];                                // 가변저항 값
   // analogdRead) : 가변저항 0~1023범위
   potentiometer_value[0] = Clamp(analogRead(A2), 600, 1013);  // (엄지: A2), 손가락을 최대한 위로 땅겼을 때,손가락을 최대한 쥐었을 때
-  potentiometer_value[1] = Clamp(analogRead(A3), 450, 1023);  // (검지: A3)
+  potentiometer_value[1] = Clamp(analogRead(A3), 331, 950);  // (검지: A3)
   potentiometer_value[2] = Clamp(analogRead(A4), 477, 1023);  // (중지: A4)
 
   int potentAngle[3];  // 가변저항 나사 각도
-  potentAngle[0] = Map(potentiometer_value[0], 1013, 600, 0, 180); // 손풀었을 때 가변저항, 쥐었을 때 가변저항, 풀었을 때 각도, 쥐었을 때 각도
-  potentAngle[1] = Map(potentiometer_value[1], 1023, 450, 0, 180);
-  potentAngle[2] = Map(potentiometer_value[2], 1023, 477, 0, 180);
+  potentAngle[0] = Map(potentiometer_value[0], 1013, 600, 20, 180); // 손풀었을 때 가변저항, 쥐었을 때 가변저항, 풀었을 때 각도, 쥐었을 때 각도
+  potentAngle[1] = Map(potentiometer_value[1], 950, 331, 20, 180);
+  potentAngle[2] = Map(potentiometer_value[2], 1023, 477, 20, 180);
 
   String msg = "";
   msg += String(analogRead(A2))  + "," ;
@@ -167,36 +170,37 @@ void MotorControl() {
 
 
 
-    //    for (int i = 0; i < 3; i++) {
+    const int space = 5;
     for (int i = 0; i < 3; i++) { // 엄지만 우선 사용
       int servoSpeed = pressure[i] * 0.1;
-      targetServoAngles[i] = potentAngle[i];//+ (100 - pressure[i]) * 0.05;  // 압력이 높을 수록 서보모터를 나사에 붙임. 수정 필요
+      //targetServoAngles[i] = potentAngle[i];//+ (100 - pressure[i]) * 0.05;  // 압력이 높을 수록 서보모터를 나사에 붙임. 수정 필요
       // 서보모터 목표각도로 현재 각도이동
-      currentServoAngles[i] += (targetServoAngles[i] > currentServoAngles[i]) ? servoSpeed : -servoSpeed;
-      currentServoAngles[i] = Clamp(currentServoAngles[i], 0, 180);
+      //currentServoAngles[i] += (targetServoAngles[i] > currentServoAngles[i]) ? servoSpeed : -servoSpeed;
+      //currentServoAngles[i] = Clamp(currentServoAngles[i], 0, 180);
       //      servo[i].attach(i + 2);                 // 서보모터 떨림 방지 : attach-detach
       //      servo[i].write(potentAngle[i]);  // 서보에 현재 각도를 반영
-
-   
-
-      if (pressure[i] > 0 && !isPress)
+      
+      if (pressure[i] > 0 && !isPress[i])
       {
-        isPress = true;
-        pressAngle = potentAngle[i];
+        isPress[i] = true;
+        //pressAngle = potentAngle[i];
         potenTest[i]=potentAngle[i];
+        Serial.println(String(potentAngle[i]) + ",");
+        servo[i].write(potentAngle[i]+space); //pressAngle +
+
       }
-      if (pressure[i] == 0 && isPress)
+      if (pressure[i] <= 0 && isPress[i])
       {
-        isPress = false;
+        isPress[i] = false;
       }
       
-      servo[i].write(isPress ? pressAngle + 50 : 180);
+      //servo[i].write(isPress[i] ?  pressAngle+5 : 180); //pressAngle +
       //msg += String(pressure[i]) + ",";
       //msg += analogRead(A2);
       //      msg += String(servo[i].read()) + ", " + String(potentAngle[i]) + " / ";
     }
     for(int i = 0; i<3; i++){
-      msg+= "poten: "+String(potenTest[i])+", servo: "+String(servo[i].read()-50+", ");
+      msg+= "poten: "+String(potenTest[i])+", servo: "+String(servo[i].read()-space)+", ";
     }
     Serial.println(msg);
     //Serial.println(currentServoAngles[0]);
@@ -319,6 +323,22 @@ void Init() {
     //    servo[i].detach();
   }
 }
+void RecvData2(){
+  while (Serial.available()) {
+      char x = Serial.read();
+      //패킷 시작 문자열 초기화
+      if (x == startMarker) {
+        recvData = "";
+      }
+      // 패킷 종료시 전송
+      else if (x == endMarker) {
+        parseData();
+      } else {
+        recvData += x;
+      }
+    }
+    Serial.flush();
+}
 
 void loop() {
   if (!isInit) {
@@ -326,11 +346,12 @@ void loop() {
     isInit = true;
   }
 
-  InputTest();
+  //InputTest();
   //RecvData();
+  RecvData2();
   MotorControl();
 
-  //SendData();
+  // SendDat/a();
 
   // put your main code here, to run repeatedly:
   delayMicroseconds(100);

@@ -106,7 +106,7 @@ void PrintPotentialmeters(){
 //<90,90,90>
 void Init() {
 
-  servo[0].attach(9);  // 엄지
+  //servo[0].attach(9);  // 엄지
   servo[1].attach(10);  // 검지
   servo[2].attach(11);  // 중지
   for (int i = 0; i < 1; i++) {
@@ -116,7 +116,7 @@ void Init() {
   // while (servo[0].read() < 180)
   // {
   //   delay(100);
-  // }
+  // } //331 950
   Serial.println("init finish");
   for (int i = 0; i < 3; i++) {
     //    servo[i].detach();
