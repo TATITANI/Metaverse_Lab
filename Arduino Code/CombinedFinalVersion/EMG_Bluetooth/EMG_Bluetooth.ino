@@ -74,7 +74,7 @@ void parseData() {
   pressure[0] = recvData.substring(0, first).toInt();
   pressure[1] = recvData.substring(first + 1, second).toInt();
   pressure[2] = recvData.substring(second + 1, length).toInt();
-  Serial.println("revc pressure  : " +  String(pressure[0]) + "," + String(pressure[1]) + "," + String(pressure[2]));
+  //Serial.println("revc pressure  : " +  String(pressure[0]) + "," + String(pressure[1]) + "," + String(pressure[2]));
 }
 
 ///////
@@ -185,7 +185,7 @@ void MotorControl() {
         isPress[i] = true;
         //pressAngle = potentAngle[i];
         potenTest[i]=potentAngle[i];
-        Serial.println(String(potentAngle[i]) + ",");
+        //Serial.println(String(potentAngle[i]) + ",");
         servo[i].write(potentAngle[i]+space); //pressAngle +
 
       }
@@ -194,7 +194,6 @@ void MotorControl() {
         isPress[i] = false;
         servo[i].write(180);
       }
-      
       //servo[i].write(isPress[i] ?  pressAngle+5 : 180); //pressAngle +
       //msg += String(pressure[i]) + ",";
       //msg += analogRead(A2);
@@ -203,7 +202,7 @@ void MotorControl() {
     for(int i = 0; i<3; i++){
       msg+= "poten: "+String(potenTest[i])+", servo: "+String(servo[i].read()-space)+", ";
     }
-    Serial.println(msg);
+    //Serial.println(msg);
     //Serial.println(currentServoAngles[0]);
 
     lastMotorUpdatedTime = millis();
@@ -228,7 +227,7 @@ void InputTest() {
       parseData();
 
     } else if (x == 'e') {
-      Serial.println("exit");
+      //Serial.println("exit");
       exit(0);
     } else {
       recvData += x;
@@ -296,7 +295,8 @@ void SendData() {
       }
       count++;
       sum = sum + envlope;
-      mySerial.println(a);  // 전송
+      Serial.write(a);
+      //mySerial.println(a);  // 전송
       delete a;
     }
 
@@ -307,7 +307,6 @@ void SendData() {
 
 bool isInit = false;
 void Init() {
-
   servo[0].attach(9);  // 엄지
   servo[1].attach(10);  // 검지
   servo[2].attach(11);  // 중지
@@ -319,7 +318,7 @@ void Init() {
   {
     delay(100);
   }
-  Serial.println("init finish");
+  //Serial.println("init finish");
   for (int i = 0; i < 3; i++) {
     //    servo[i].detach();
   }
@@ -352,8 +351,12 @@ void loop() {
   RecvData2();
   MotorControl();
 
-  // SendDat/a();
+  //SendData();
 
   // put your main code here, to run repeatedly:
   delayMicroseconds(100);
 }
+//서보 : 가변저항 : <180,180,180> : 600 450 477
+//서보 : 가변저항 : <0,0,0> :  1013  1000 1023
+//<0,0,0>       873 1023
+//<90,90,90>

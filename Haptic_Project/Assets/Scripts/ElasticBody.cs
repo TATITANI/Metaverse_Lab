@@ -76,7 +76,9 @@ public class ElasticBody : MonoBehaviour
                     const float hitPointOffset = 0.1f;
                     Vector3 point = hit.point + hit.normal * hitPointOffset;
                     Press(0, point);
+                    //
                 }
+                //
             }
         }
     }

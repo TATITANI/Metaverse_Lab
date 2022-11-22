@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 
 [CreateAssetMenu(fileName = "HandControllerData", menuName = "Scriptable Object/HandControllerData",
@@ -15,6 +16,9 @@ public class HandControllerSO : ScriptableObject
     {
         public float fingerPressure = 0; // 0~1
     }
+
+    public UnityEvent<int> OnChangedGrab = new UnityEvent< int>(); // pressure
+
 
     public PressureInfo[] pressureRight { get; private set; } = new PressureInfo[3];
 

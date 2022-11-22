@@ -16,23 +16,26 @@ public class Grabbable : MonoBehaviour
     // [SerializeField] private UnityEvent<GrabPos> eventGrab;
     // private GrabPos grabPos = new GrabPos();
 
-    // private void Start()
-    // {
-    //     interaction = GetComponent<InteractionBehaviour>();
-    //     // controller = AppManager.Instance.handController;
-    //     // // interaction.OnGraspBegin = OnGrabBegin;
-    //     // // interaction.OnGraspStay = OnGrab;
-    //     // // interaction.OnGraspEnd = OnGrabEnd;
-    // }
+    private void Start()
+    {
+        interaction = GetComponent<InteractionBehaviour>();
+        // controller = AppManager.Instance.handController;
+        interaction.OnGraspBegin = OnGrabBegin;
+        //interaction.OnGraspStay = OnGrab;
+        interaction.OnGraspEnd = OnGrabEnd;
+    }
 
     public void OnGrabBegin()
     {
         controllerSO.isGrab = true;
+        //SerialCommunicator.Instance.SendDummy("<1,1,1>");
     }
 
     public void OnGrabEnd()
     {
         controllerSO.isGrab = false;
+        //SerialCommunicator.Instance.SendDummy("<0,0,0>");
+
         // controllerSO.ResetFingerPressure();
     }
 
