@@ -192,6 +192,7 @@ void MotorControl() {
       if (pressure[i] <= 0 && isPress[i])
       {
         isPress[i] = false;
+        servo[i].write(180);
       }
       
       //servo[i].write(isPress[i] ?  pressAngle+5 : 180); //pressAngle +
