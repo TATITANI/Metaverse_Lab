@@ -35,14 +35,14 @@ void MotorControl() {
   // msg += String(analogRead(A3)) + ",";
   // msg += String(analogRead(A4)) + "/";
 
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 3; i++) {
     servo[i].write(pressure[i]);
   }
 
   Serial.print("Servo[D2],[D3],[D4]: "+String(servo[0].read())+"/");
   Serial.print(String(servo[1].read())+"/");
   Serial.println(String(servo[2].read()));
-  delay(500);
+  delay(100);
 }
 
 void setup() {
@@ -78,7 +78,7 @@ void loop() {
 
   InputTest();
   //RecvData();
-  MotorControl();
+  //MotorControl();
   PrintPotentialmeters();
   //SendData();
 
@@ -87,29 +87,36 @@ void loop() {
 }
 
 void PrintPotentialmeters(){
-  potentiometer_value[0] = analogRead(A2);
-  potentiometer_value[1] = analogRead(A3);
-  potentiometer_value[2] = analogRead(A3);
-  Serial.print("Poten[A2],[A3],[A4]: "+String(potentiometer_value[0])+"/ ");
-  Serial.print(String(potentiometer_value[1])+"/ ");
-  Serial.println(String(potentiometer_value[2]));
-  Serial.println("----------------------------------");
-  delay(500);
+  //if(potentiometer_value[0] != analogRead(A2) ||potentiometer_value[1] != analogRead(A3)||potentiometer_value[2] != analogRead(A4))  
+  {
+    potentiometer_value[0] = analogRead(A2);
+    potentiometer_value[1] = analogRead(A3);
+    potentiometer_value[2] = analogRead(A4);
+    Serial.print("Poten[A2],[A3],[A4]: "+String(potentiometer_value[0])+"/ ");
+    Serial.print(String(potentiometer_value[1])+"/ ");
+    Serial.println(String(potentiometer_value[2]));
+    Serial.println("----------------------------------");
+    delay(100);
+  }
+  
 }
-
+//서보 : 가변저항 : <180,180,180> : 600 450 477
+//서보 : 가변저항 : <0,0,0> :  1013  1000 1023
+//<0,0,0>       873 1023
+//<90,90,90>
 void Init() {
 
-  servo[0].attach(2);  // 엄지
-  servo[1].attach(3);  // 검지
-  servo[2].attach(4);  // 중지
+  servo[0].attach(9);  // 엄지
+  servo[1].attach(10);  // 검지
+  servo[2].attach(11);  // 중지
   for (int i = 0; i < 1; i++) {
     servo[i].write(180);
   }
   //  while (servo[0].read() < 180 || servo[0].read() < 180 || servo[0].read() < 180)
-  while (servo[0].read() < 180)
-  {
-    delay(100);
-  }
+  // while (servo[0].read() < 180)
+  // {
+  //   delay(100);
+  // }
   Serial.println("init finish");
   for (int i = 0; i < 3; i++) {
     //    servo[i].detach();
@@ -146,5 +153,12 @@ void InputTest() {
     } else {
       recvData += x;
     }
+    MotorControl();
   }
 }
+
+//서보 : 가변저항 : <180,180,180> : 600 450 477
+//서보 : 가변저항 : <0,0,0> :  1013  1000 1023
+//<0,0,0>       873 1023
+//<90,90,90>
+
