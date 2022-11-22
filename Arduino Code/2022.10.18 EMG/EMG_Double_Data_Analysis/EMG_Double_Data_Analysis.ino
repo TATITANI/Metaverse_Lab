@@ -80,7 +80,7 @@ void setup() {
     myFilter.init(sampleRate, humFreq, true, true, true);
 
     // open serial
-    Serial.begin(115200);
+    Serial.begin(9600);
     Serial.println("envlope,envlope_1");
 
     // setup for time cost measure
