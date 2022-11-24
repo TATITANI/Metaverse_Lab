@@ -112,11 +112,15 @@ public class UImanager : MonoBehaviour
     void Update()
     {
         StartTime();
+        readEMG();
         EMG_Contents_StartEMG();
         EMG_Task_StartEMG();
         UpdatePressure();
     }
-
+    void readEMG()
+    {
+        //EMG_Serial_Reader.Instance
+    }
     void StartTime()
     {
         if (Contents_timeActive)
