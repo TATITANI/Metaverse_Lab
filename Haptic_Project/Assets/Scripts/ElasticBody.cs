@@ -12,8 +12,10 @@ public class ElasticBody : MonoBehaviour
     private Vector3[] initVertices, vertices, velocities, normals;
 
     private const float maxElasticity = 20;
+
     // 탄성
-    [Range(0,maxElasticity)] [SerializeField] float elasticity = 5f;
+    /*[Range(0,maxElasticity)]*/
+    [SerializeField] float elasticity = 5f;
 
     // 누르는 압력
     [Min(0)] [SerializeField] float power = 5f;
@@ -57,7 +59,6 @@ public class ElasticBody : MonoBehaviour
         {
             UpdateMesh();
         }
-
     }
 
     void ProcessInput()
@@ -103,12 +104,14 @@ public class ElasticBody : MonoBehaviour
 
             Vector3 direction = diff.normalized;
             float velocity = power / Mathf.Pow(1 + distance * attenuation, 2);
-            velocities[i] += direction * velocity * Time.deltaTime;
+            velocities[i] += direction * velocity;
         }
 
-        float pressureOffset = 4f;
-        float pressure = pressureOffset * (vertices[pressingVertexID] - initVertices[pressingVertexID]).sqrMagnitude 
-                         * elasticity / (initVertexSqrMag * maxElasticity );
+        float currentGap = (vertices[pressingVertexID] - initVertices[pressingVertexID]).sqrMagnitude;
+        float maxGap = ((velocities[pressingVertexID] + power * (vertices[pressingVertexID] - contactLocalPos))
+                        / elasticity).sqrMagnitude; // 최대한으로 눌렸을 때 초기위치와 떨어진 거리
+
+        float pressure = currentGap / maxGap;
         pressure = Mathf.Clamp01(pressure);
         controllerSO.SetFingerPressure(fingerId, pressure);
     }
@@ -117,7 +120,7 @@ public class ElasticBody : MonoBehaviour
     {
         for (int i = 0; i < velocities.Length; i++)
         {
-            velocities[i] -= (vertices[i] - initVertices[i]) * elasticity * Time.deltaTime;
+            velocities[i] -= (vertices[i] - initVertices[i]) * elasticity;
         }
     }
 
@@ -125,7 +128,7 @@ public class ElasticBody : MonoBehaviour
     {
         for (int i = 0; i < vertices.Length; i++)
         {
-            velocities[i] *= damping * Time.deltaTime;
+            velocities[i] *= damping;
         }
     }
 
@@ -134,7 +137,7 @@ public class ElasticBody : MonoBehaviour
         float diff = 0;
         for (int i = 0; i < vertices.Length; i++)
         {
-            vertices[i] += velocities[i];
+            vertices[i] += velocities[i] * Time.deltaTime;
             diff += velocities[i].sqrMagnitude;
         }
 
