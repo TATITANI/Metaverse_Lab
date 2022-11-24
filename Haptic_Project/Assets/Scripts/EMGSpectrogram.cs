@@ -21,22 +21,22 @@ public class EMGSpectrogram : MonoBehaviour
     [SerializeField] private TextMeshProUGUI txtTitle;
     [SerializeField] [Range(0, 1)] private float maxHue = 0.6f; // blue
     private Queue<Complex[]> itemDatas;
-    private int spectrogramSize;
+    private Vector2Int spectrogramSize;
 
-
-    private void Awake()
+    private void Start()
     {
-        spectrogramSize = Mathf.CeilToInt(emgSo.capacity / 2);
+        spectrogramSize = new Vector2Int((int)(1f / SerialCommunicator.Instance.SampleTime),
+            Mathf.CeilToInt(emgSo.capacity / 2));
         horLayoutGroup.GetComponent<RectTransform>().sizeDelta =
             blockSize * spectrogramSize;
 
         spectrogramItem.gameObject.SetActive(false);
-        spectrogramItems = new SpectrogramItem[spectrogramSize];
-        for (int i = 0; i < spectrogramSize; i++)
+        spectrogramItems = new SpectrogramItem[spectrogramSize.x];
+        for (int i = 0; i < spectrogramSize.x; i++)
         {
             SpectrogramItem item =
                 Instantiate(spectrogramItem, spectrogramItem.transform.parent);
-            item.Init(spectrogramSize, blockSize,maxHue);
+            item.Init(spectrogramSize.y, blockSize, maxHue);
             item.gameObject.SetActive(true);
             spectrogramItems[i] = item;
         }
@@ -55,7 +55,7 @@ public class EMGSpectrogram : MonoBehaviour
 
         float dH = maxHue / size.y;
         float h = 0;
-        for (int y = (int)size.y-1; y >= 0; y--)
+        for (int y = (int)size.y - 1; y >= 0; y--)
         {
             Color color = Color.HSVToRGB(h, 1, 1);
             for (int x = 0; x < size.x; x++)
@@ -70,7 +70,7 @@ public class EMGSpectrogram : MonoBehaviour
         imgColor.material.mainTexture = tex;
     }
 
-    void UpdateData(EMG_SO.EMGType _emgType)
+    void UpdateData(EMG_SO.EMGType _emgType, int emg)
     {
         if (emgType != _emgType)
             return;
@@ -83,9 +83,10 @@ public class EMGSpectrogram : MonoBehaviour
         void AddFFT()
         {
             Complex[] fftResultRaw = FFTGenerator.FFT(emgDatas, 0, emgDatas.Length - 1);
-            int centerID = fftResultRaw.Length - spectrogramSize;
+            int centerID = fftResultRaw.Length - spectrogramSize.y;
+
             Complex[] fftResult = fftResultRaw[centerID..];
-        
+
             // Debug.Log($"amp min :{fftResult.Min(r => r.Magnitude)}" +
             // $" max : {fftResult.Max(r => r.Magnitude)}");
 

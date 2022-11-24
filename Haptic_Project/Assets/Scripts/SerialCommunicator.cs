@@ -15,7 +15,28 @@ public class SerialCommunicator : MonoBehaviour
     private string deviceName;
     [SerializeField] private HandControllerSO handControllerSo;
     [SerializeField] private EMG_SO emgSO;
+    [SerializeField] public float sampleTime = 0.1f;
+    public float SampleTime
+    {
+        get { return sampleTime; }
+    }
 
+    private static SerialCommunicator _instance;
+    public static SerialCommunicator Instance
+    {
+        get
+        {
+            if (_instance == null)
+                _instance = FindObjectOfType<SerialCommunicator>();
+            if (_instance == null)
+            {
+                GameObject container = new GameObject("SerialCommunicator");
+                _instance = container.AddComponent<SerialCommunicator>();
+            }
+
+            return _instance;
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {

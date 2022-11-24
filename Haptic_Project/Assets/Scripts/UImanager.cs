@@ -93,6 +93,7 @@ public class UImanager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //EMG_Contents_Active = true;
         Text_ContentsTimer.text = Contents_TimeStart.ToString("F2");
         Text_TaskTimer.text = Contents_TimeStart.ToString("F2");
 
@@ -140,12 +141,18 @@ public class UImanager : MonoBehaviour
 
     public void Contents_StartPauseBtn()
     {
+        //Debug.Log("Contents_StartPauseBtn");
+        //EMG_Contents_Active = !EMG_Contents_Active;
+        //EMG_startPauseText.text = EMG_Contents_Active ? "PAUSE" : "START";
+
         Contents_timeActive = !Contents_timeActive;
         Contents_startPauseText.text = Contents_timeActive ? "PAUSE" : "START";
         EMG_Contents_Active = !EMG_Contents_Active;
     }
     public void Task_StartPauseBtn()
     {
+        Debug.Log("Task_StartPauseBtn");
+
         Task_timeActive = !Task_timeActive;
         Task_startPauseText.text = Task_timeActive ? "PAUSE" : "START";
         EMG_Task_Active = !EMG_Task_Active;
@@ -231,50 +238,56 @@ public class UImanager : MonoBehaviour
         }
     }
 
-    void EMG_Task_StartEMG()
+    void EMG_Task_StartEMG(EMG_SO.EMGType _emgType, int emg)
     {
         //추후 아두이노에서 EMG를 받아오는 함수로 변경
         if (EMG_Task_Active)
         {
-            if (IsThereAnyValueToRead)
+            Task_count++;
+
+            switch (_emgType)
             {
-                Task_count++;
+                case EMG_SO.EMGType.GRAB:
+                    EMG_Task_Grab = emg;
 
-                // EMG_Task_Grab = Random.Range(0, 1500);
-                // EMG_Task_Pickup = Random.Range(0, 1500);
-                //Task_Grab_EMGAvg = 0;
-                Text_Grab_EMG_Task.text = EMG_Task_Grab.ToString("F2");
-                Text_PickUp_EMG_Task.text = EMG_Task_Pickup.ToString("F2");
+                    Text_Grab_EMG_Task.text = EMG_Task_Grab.ToString("F2");
+                    //합
+                    Task_Grab_EMGSum += EMG_Task_Grab;
+                    //평균
+                    Task_Grab_EMGAvg = Task_Grab_EMGSum / Task_count;
+                    //최대값
+                    if (Task_Grab_EMGMax < EMG_Task_Grab)
+                        Task_Grab_EMGMax = EMG_Task_Grab;
+                    Text_Grab_Avg_Task.text = Task_Grab_EMGAvg.ToString("F2");
 
-                //합
-                Task_Grab_EMGSum += EMG_Task_Grab;
-                Task_Pickup_EMGSum += EMG_Task_Pickup;
-                //평균
-                Task_Grab_EMGAvg = Task_Grab_EMGSum / Task_count;
-                Task_Pickup_EMGAvg = Task_Pickup_EMGSum / Task_count;
-                //최대값
-                if (Task_Grab_EMGMax < EMG_Task_Grab) Task_Grab_EMGMax = EMG_Task_Grab;
-                if (Task_Pickup_EMGMax < EMG_Task_Pickup) Task_Pickup_EMGMax = EMG_Task_Pickup;
+                    if (EMG_Task_Grab > GrabThreshold) //임계값
+                    {
+                        EMG_Count_Grab_Task++;
+                    }
 
-                
+                    //카운트 대신 최대값 출력 테스트
+                    Text_Grab_Count_Task.text = Task_Grab_EMGMax.ToString();
 
-                Text_Grab_Avg_Task.text = Task_Grab_EMGAvg.ToString("F2");
-                Text_PickUp_Avg_Task.text = Task_Pickup_EMGAvg.ToString("F2");
+                    break;
 
-                if (EMG_Task_Grab > GrabThreshold && !StopGrabCount) //임계값
-                {
-                    EMG_Count_Grab_Task++;
-                }
-                if (EMG_Task_Pickup > PickupThreshold && !StopPickupCount)
-                {
-                    EMG_Count_Pickup_Task++;
-                }
-                //카운트 대신 최대값 출력 테스트
-                Text_Grab_Count_Task.text = Task_Grab_EMGMax.ToString();
-                Text_PickUp_Count_Task.text = Task_Pickup_EMGMax.ToString();
+                case EMG_SO.EMGType.PICK:
+                    EMG_Task_Pickup = emgSO.emgDatas[_emgType].Peek();
+
+                    Text_PickUp_EMG_Task.text = EMG_Task_Pickup.ToString("F2");
+                    Task_Pickup_EMGSum += EMG_Task_Pickup;
+                    Task_Pickup_EMGAvg = Task_Pickup_EMGSum / Task_count;
+                    if (Task_Pickup_EMGMax < EMG_Task_Pickup)
+                        Task_Pickup_EMGMax = EMG_Task_Pickup;
+                    Text_PickUp_Avg_Task.text = Task_Pickup_EMGAvg.ToString("F2");
+
+                    if (EMG_Task_Pickup > PickupThreshold)
+                    {
+                        EMG_Count_Pickup_Task++;
+                    }
+
+                    Text_PickUp_Count_Task.text = Task_Pickup_EMGMax.ToString();
+                    break;
             }
-
-            
         }
     }
     public void Contents_ResetBtn()

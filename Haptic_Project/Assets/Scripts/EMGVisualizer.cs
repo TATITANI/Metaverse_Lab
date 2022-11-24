@@ -34,7 +34,6 @@ public class EMGVisualizer : MonoBehaviour
     }
 
     [SerializeField] private EMG_SO emgSO;
-    [SerializeField] private int maxPeak = 300;
     [SerializeField] private TextMeshProUGUI txtPeak;
 
     [SerializeField] private RectTransform graphBG;
@@ -53,9 +52,9 @@ public class EMGVisualizer : MonoBehaviour
 
     void Start()
     {
-        txtPeak.text = $"{maxPeak}";
+        txtPeak.text = $"{emgSO.MaxPeak}";
         graphSize = graphBG.sizeDelta;
-        valueNormalized = graphSize.y / maxPeak;
+        valueNormalized = graphSize.y / emgSO.MaxPeak;
 
         var enumEmgValues = Enum.GetValues(typeof(EMG_SO.EMGType));
         foreach (var enumEmgValue in enumEmgValues)
@@ -74,8 +73,8 @@ public class EMGVisualizer : MonoBehaviour
             {
                 var line = Instantiate(trfVerticalLine.gameObject, trfVerticalLine.parent);
                 line.gameObject.SetActive(true);
-                
-                foreach(var enumEmgValue in enumEmgValues)
+
+                foreach (var enumEmgValue in enumEmgValues)
                 {
                     int pointID = Array.IndexOf(enumEmgValues, enumEmgValue);
                     RectTransform point = line.transform.GetChild(pointID).GetComponent<RectTransform>();
@@ -83,18 +82,18 @@ public class EMGVisualizer : MonoBehaviour
                     emgElements[(EMG_SO.EMGType)enumEmgValue].AddElement(point);
                 }
             }
-         
+
         }
 
         ResizeGraph();
 
-        if (AppManager.Instance.IsTest)
+        if (/*AppManager.Instance.IsTest*/ true)
         {
             StartCoroutine(PushDatas_Test());
         }
     }
 
-    void Draw(EMG_SO.EMGType emgType)
+    void Draw(EMG_SO.EMGType emgType, int emg)
     {
         Queue<int> _datas = new Queue<int>(emgSO.emgDatas[emgType]);
         List<RectTransform> points = emgElements[emgType].points;
@@ -106,7 +105,7 @@ public class EMGVisualizer : MonoBehaviour
         while (_datas.TryPeek(out value))
         {
             points[pointID].gameObject.SetActive(true);
-            float y = Mathf.Clamp(value * valueNormalized, 0, maxPeak);
+            float y = Mathf.Clamp(value * valueNormalized, 0, graphSize.y);
             points[pointID].anchoredPosition = new Vector2(points[pointID].anchoredPosition.x, y);
 
             void DrawLine()
@@ -167,12 +166,6 @@ public class EMGVisualizer : MonoBehaviour
             dataId = (dataId == dataSize - 1) ? 0 : dataId + 1;
             emgSO.PushData(EMG_SO.EMGType.GRAB, testGrabDatas[dataId]);//+UnityEngine.Random.Range(0, 100));
             emgSO.PushData(EMG_SO.EMGType.PICK, testPickDatas[dataId]);//+UnityEngine.Random.Range(0, 100));
-
-            UImanager.Instance.EMG_Contents_Grab =  testGrabDatas[dataId];
-            UImanager.Instance.EMG_Contents_Pickup =  testPickDatas[dataId];
-            
-            UImanager.Instance.EMG_Task_Grab =  testGrabDatas[dataId];
-            UImanager.Instance.EMG_Task_Pickup =  testPickDatas[dataId];
 
             yield return new WaitForSeconds(0.1f);
         }

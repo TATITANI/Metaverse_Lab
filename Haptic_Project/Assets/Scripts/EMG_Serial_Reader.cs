@@ -65,7 +65,7 @@ public class EMG_Serial_Reader : MonoBehaviour
         //Vector3 inputVector = new Vector3(-float.Parse(s[2]), float.Parse(s[0]), float.Parse(s[1]));
         int grabEmg = Convert.ToInt32(emgDatas[1]);
         int pickEmg = Convert.ToInt32(emgDatas[2]);
-        Debug.Log($"recv grabEmg : {grabEmg} / pickEmg : {pickEmg}");
+        //Debug.Log($"recv grabEmg : {grabEmg} / pickEmg : {pickEmg}");
         emgSO.PushData(EMG_SO.EMGType.GRAB, grabEmg);
         emgSO.PushData(EMG_SO.EMGType.PICK, pickEmg);
         String msg = grabEmg.ToString() + ", " + pickEmg.ToString();

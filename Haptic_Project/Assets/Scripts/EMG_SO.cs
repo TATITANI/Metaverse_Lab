@@ -19,7 +19,7 @@ public class EMG_SO : ScriptableObject
 
     public int capacity { get; private set; } = 16;
     private UnityEvent<EMGType, int> OnChangedEvent = new UnityEvent<EMGType, int>();
-    [SerializeField] private int maxPeak = 1000;
+    [SerializeField] private int maxPeak = 5000;
     public int MaxPeak
     {
         get { return maxPeak; }
