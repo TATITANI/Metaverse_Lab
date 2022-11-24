@@ -69,7 +69,7 @@ public class UImanager : MonoBehaviour
     bool StopGrabCount=false;
     bool StopPickupCount=false;
 
-
+    [SerializeField] private EMG_SO emgSO;
     [SerializeField] TextMeshProUGUI Text_ContentsTimer, Text_TaskTimer, Contents_startPauseText, Task_startPauseText;
     [SerializeField] TextMeshProUGUI EMG_startPauseText;
 
@@ -107,14 +107,17 @@ public class UImanager : MonoBehaviour
 
         Text_Grab_Count_Task.text = EMG_Count_Grab_Task.ToString();
         Text_PickUp_Count_Task.text = EMG_Count_Pickup_Task.ToString();
+
+        emgSO.RegisterOnChangedEvent(EMG_Task_StartEMG);
+        emgSO.RegisterOnChangedEvent(EMG_Contents_StartEMG);
     }
  // Update is called once per frame
     void Update()
     {
         StartTime();
-        readEMG();
-        EMG_Contents_StartEMG();
-        EMG_Task_StartEMG();
+        //readEMG();
+        //EMG_Contents_StartEMG();
+        //EMG_Task_StartEMG();
         UpdatePressure();
     }
     void readEMG()
@@ -156,7 +159,7 @@ public class UImanager : MonoBehaviour
             Text_ContentsTimer.text = Contents_TimeStart.ToString("F2");
         }
     }
-    void EMG_Contents_StartEMG()
+    void EMG_Contents_StartEMG(EMG_SO.EMGType _emgType, int emg)
     {
         //추후 아두이노에서 EMG를 받아오는 함수로 변경
         if (EMG_Contents_Active)
@@ -164,39 +167,65 @@ public class UImanager : MonoBehaviour
             if(IsThereAnyValueToRead)
             {
                 Contents_count++;
-
-
-                //EMG_Contents_Grab = Random.Range(0, 1500);
-                //EMG_Contents_Pickup = Random.Range(0, 1500);
-                //Content_Grab_EMGAvg = 0;
-                Text_Grab_EMG_Contents.text = EMG_Contents_Grab.ToString("F2");
-                Text_PickUp_EMG_Contents.text = EMG_Contents_Pickup.ToString("F2");
-
-                //합
-                Content_Grab_EMGSum += EMG_Contents_Grab;
-                Content_Pickup_EMGSum += EMG_Contents_Pickup;
-                //평균
-                Content_Grab_EMGAvg = Content_Grab_EMGSum / Contents_count;
-                Content_Pickup_EMGAvg = Content_Pickup_EMGSum / Contents_count;
-
-                Text_Grab_Avg_Contents.text = Content_Grab_EMGAvg.ToString("F2");
-                Text_PickUp_Avg_Contents.text = Content_Pickup_EMGAvg.ToString("F2");
-
-
-                if (EMG_Contents_Grab > GrabThreshold && !StopGrabCount) //임계값보다 크고 충분히 시간이 지난 후 다시 카운팅
+                switch (_emgType)
                 {
-                    EMG_Count_Grab_Contents++;
-                    StopGrabCount= true;
-                    StartCoroutine("DelayGrabCounting");
+                    case EMG_SO.EMGType.GRAB:
+                        EMG_Contents_Grab = emg;
+
+                        //합
+                        Content_Grab_EMGSum += EMG_Contents_Grab;
+                        //평균
+                        Content_Grab_EMGAvg = Content_Grab_EMGSum / Contents_count;
+                        Text_Grab_Avg_Contents.text = Content_Grab_EMGAvg.ToString("F2");
+                        Text_Grab_EMG_Contents.text = EMG_Contents_Grab.ToString("F2");
+                        Text_Grab_Count_Contents.text = EMG_Count_Grab_Contents.ToString();
+
+                        if (EMG_Contents_Grab > GrabThreshold && !StopGrabCount) //임계값보다 크고 충분히 시간이 지난 후 다시 카운팅
+                        {
+                            EMG_Count_Grab_Contents++;
+                            StopGrabCount = true;
+                            StartCoroutine("DelayGrabCounting");
+                            Text_Grab_Count_Contents.text = EMG_Count_Grab_Contents.ToString();
+
+                        }
+                        break;
+
+                    case EMG_SO.EMGType.PICK:
+                        EMG_Contents_Pickup = emgSO.emgDatas[_emgType].Peek();
+
+                        Content_Pickup_EMGSum += EMG_Contents_Pickup;
+                        Content_Pickup_EMGAvg = Content_Pickup_EMGSum / Contents_count;
+
+                        Text_PickUp_Avg_Contents.text = Content_Pickup_EMGAvg.ToString("F2");
+                        Text_PickUp_EMG_Contents.text = EMG_Contents_Pickup.ToString("F2");
+
+                        Text_PickUp_Count_Contents.text = EMG_Count_Pickup_Contents.ToString();
+
+                        if (EMG_Contents_Pickup > PickupThreshold && !StopPickupCount)
+                        {
+                            EMG_Count_Pickup_Contents++;
+                            StopPickupCount = true;
+                            StartCoroutine("DelayPickupCounting");
+                        }
+                        Text_PickUp_Count_Contents.text = EMG_Count_Pickup_Contents.ToString();
+
+                        break;
                 }
-                if (EMG_Contents_Pickup > PickupThreshold && !StopPickupCount)
-                {
-                    EMG_Count_Pickup_Contents++;
-                    StopPickupCount=true;
-                    StartCoroutine("DelayPickupCounting");
-                }
-                Text_Grab_Count_Contents.text = EMG_Count_Grab_Contents.ToString();
-                Text_PickUp_Count_Contents.text = EMG_Count_Pickup_Contents.ToString();
+
+                //if (EMG_Contents_Grab > GrabThreshold && !StopGrabCount) //임계값보다 크고 충분히 시간이 지난 후 다시 카운팅
+                //{
+                //    EMG_Count_Grab_Contents++;
+                //    StopGrabCount= true;
+                //    StartCoroutine("DelayGrabCounting");
+                //}
+                //if (EMG_Contents_Pickup > PickupThreshold && !StopPickupCount)
+                //{
+                //    EMG_Count_Pickup_Contents++;
+                //    StopPickupCount=true;
+                //    StartCoroutine("DelayPickupCounting");
+                //}
+                //Text_Grab_Count_Contents.text = EMG_Count_Grab_Contents.ToString();
+                //Text_PickUp_Count_Contents.text = EMG_Count_Pickup_Contents.ToString();
             }
             
         }
