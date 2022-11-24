@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
+
 public class UImanager : MonoBehaviour
 {
     private static UImanager _instance;
@@ -311,10 +313,16 @@ public class UImanager : MonoBehaviour
 
      public void UpdatePressure()
      {
-         for (int i = 0; i < listPressureUI.Count; i++)
-         {
-             listPressureUI[i].SetState(controllerSO.pressureRight[i].fingerPressure);
-         }
+        Scene scene = SceneManager.GetActiveScene(); //함수 안에 선언하여 사용한다.
+        //Debug.Log(scene.name);
+        if (scene.name != "Main_HapticDevice_others")
+        {
+            for (int i = 0; i < listPressureUI.Count; i++)
+            {
+                listPressureUI[i].SetState(controllerSO.pressureRight[i].fingerPressure);
+            }
+        }
+        
      }
 
      public void UpdatePressure(int id, float pressure)
