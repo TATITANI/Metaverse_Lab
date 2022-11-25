@@ -95,7 +95,7 @@ void setup() {
   Serial.begin(9600);
   mySerial.begin(9600);
 
-  myFilter.init(sampleRate, humFreq, true, true, true);
+  myFilter.init((SAMPLE_FREQUENCY) sampleRate, (NOTCH_FREQUENCY)humFreq, true, true, true);
   // setup for time cost measure
   // using micros()
   timeBudget = 1e6 / sampleRate;
@@ -130,7 +130,7 @@ Servo servo[3];  // 서보모터를 배열로 정의
 unsigned long lastMotorUpdatedTime = 0;
 int testPressID = 0;
 bool isPress[3] = {false, false, false};
-int pressAngle; // 눌렀을 떄 최초 나사각도
+int lastServoAngle[3] = {0,0,0};
 void MotorControl() {
 
   //테스트코드
@@ -154,23 +154,18 @@ void MotorControl() {
   msg += String(analogRead(A4)) + "/";
 
   // write 서보모터의 각도 입력값을 서서히 증가시키는 방식으로 탄성력 구현해야함
-  int delay_value = 500;  // milliseconds
+  int delayMotor = 200;  // milliseconds
 
   int targetServoAngles[3];   // 목표 각도
   int currentServoAngles[3];  // 서보모터의 현재 각도
   // delay 함수 사용시 근전도 전송도 지연되므로 사용x
 
-
-  if (millis() - lastMotorUpdatedTime > delay_value) {
+  if (millis() - lastMotorUpdatedTime > delayMotor) {
     //test
-
     // pressure[0] = pressure[1] = pressure[2] = testPress[testPressID];
     //testPressID = testPressID == 9 ? 0 : testPressID + 1;
     ///testEnd
 
-
-
-    int space = 1;
     for (int i = 0; i < 3; i++) { // 엄지만 우선 사용
       int servoSpeed = pressure[i] * 0.1;
       //targetServoAngles[i] = potentAngle[i];//+ (100 - pressure[i]) * 0.05;  // 압력이 높을 수록 서보모터를 나사에 붙임. 수정 필요
@@ -178,62 +173,26 @@ void MotorControl() {
       //currentServoAngles[i] += (targetServoAngles[i] > currentServoAngles[i]) ? servoSpeed : -servoSpeed;
       //currentServoAngles[i] = Clamp(currentServoAngles[i], 0, 180);
       //      servo[i].attach(i + 2);                 // 서보모터 떨림 방지 : attach-detach
-      //      servo[i].write(potentAngle[i]);  // 서보에 현재 각도를 반영
-
-
 
       if (pressure[i] > 0) // 압력이 있을 경우
       {
         isPress[i] = true;
-        space = 20 - (pressure[i] * 0.1f);
-        //pressAngle = potentAngle[i];
-        //potenTest[i] = potentAngle[i];
-        //Serial.println(String(potentAngle[i]) + ",");
-        servo[i].write(potentAngle[i] + space);
+        int space =  (100- pressure[i]) * 0.1f;
+        
+        if (potentAngle[i] >= lastServoAngle[i]-10) // 부딪혔을 떄 이동
+        {
+          lastServoAngle[i] = Clamp(potentAngle[i] + space,potentAngle[i],potentAngle[i]+5);
+          servo[i].write(lastServoAngle[i]);
+        }
 
       }
-       else if (pressure[i] <= 0 && isPress[i]) // 압력이 0일 경우(손을 땐 경우)
+      else if (pressure[i] <= 0 && isPress[i]) // 압력이 0일 경우(손을 땐 경우)
       {
+        lastServoAngle[i] = 0; // 리셋
         servo[i].write(180);
-        isPress[i] = false; 
+        isPress[i] = false;
       }
 
-//      if (pressure[i] > 25 && pressure[i] <= 50) // 압력이 있을 경우
-//      {
-//        isPress[i] = true;
-//        space = 15;
-//        //pressAngle = potentAngle[i];
-//        potenTest[i] = potentAngle[i];
-//        //Serial.println(String(potentAngle[i]) + ",");
-//        servo[i].write(potentAngle[i] + space);
-//
-//      }
-//      if (pressure[i] > 50 && pressure[i] <= 75) // 압력이 있을 경우
-//      {
-//        isPress[i] = true;
-//        space = 7;
-//        //pressAngle = potentAngle[i];
-//        potenTest[i] = potentAngle[i];
-//        //Serial.println(String(potentAngle[i]) + ",");
-//        servo[i].write(potentAngle[i] + space);
-//
-//      }
-//      if (pressure[i] > 75 && pressure[i] <= 100) // 압력이 있을 경우
-//      {
-//        isPress[i] = true;
-//        space = 2;
-//        //pressAngle = potentAngle[i];
-//        potenTest[i] = potentAngle[i];
-//        //Serial.println(String(potentAngle[i]) + ",");
-//        servo[i].write(potentAngle[i] + space);
-//
-//      }
-
-           
-     
-    }
-    for (int i = 0; i < 3; i++) {
-      msg += "poten: " + String(potenTest[i]) + ", servo: " + String(servo[i].read() - space) + ", ";
     }
 
     lastMotorUpdatedTime = millis();
@@ -289,10 +248,10 @@ int lastTimeEMG = 0;
 // EMG 블루투스 전송
 void SendData() {
 
-  if (micros() - lastTimeEMG < delayEMG_Micro)
-  {
-    return;
-  }
+  //  if (micros() - lastTimeEMG < delayEMG_Micro)
+  //  {
+  //    return;
+  //  }
 
   // In order to make sure the ADC sample frequence on arduino,
   // the time cost should be measured each loop
@@ -397,5 +356,3 @@ void loop() {
 }
 //서보 : 가변저항 : <180,180,180> : 600 450 477
 //서보 : 가변저항 : <0,0,0> :  1013  1000 1023
-//<0,0,0>       873 1023
-//<90,90,90>

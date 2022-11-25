@@ -133,7 +133,7 @@ public class SerialCommunicator : MonoBehaviour
             {
                 serialController.SendSerialMessage(msg);
 
-                Thread.Sleep(200);
+                Thread.Sleep(500);
             }
             catch (Exception e)
             {
@@ -225,6 +225,6 @@ public class SerialCommunicator : MonoBehaviour
 
     private void UpdateReceivedData(String msg)
     {
-        Debug.Log($"recv Data : {msg}");
+        // Debug.Log($"recv Data : {msg}");
     }
 }
