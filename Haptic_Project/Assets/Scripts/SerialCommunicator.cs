@@ -13,8 +13,9 @@ public class SerialCommunicator : MonoBehaviour
 {
     Thread sendThread;
 
-    static public SerialPort
-        serial = new SerialPort("COM11", 9600); //here change port - where you have connected arduino to computer
+    //static public SerialPort
+    //serial = new SerialPort("COM10", 9600); //here change port - where you have connected arduino to computer
+    public SerialController serialController;
 
     private BluetoothHelper helper;
     private string deviceName;
@@ -46,10 +47,7 @@ public class SerialCommunicator : MonoBehaviour
         }
     }
 
-    private static void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
-    {
-        Debug.Log($"recv : {serial.ReadLine()}");
-    }
+
 
     void Start()
     {
@@ -59,12 +57,10 @@ public class SerialCommunicator : MonoBehaviour
             return;
         }
 
-        Debug.Log($"{serial.DataBits}, {serial.Parity}");
-        // serial.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
         sendThread = new Thread(SendThread);
         sendThread.Start();
 
-        #region ºí·çÅõ½º ÃÊ±âÈ­
+        #region ë¸”ë£¨íˆ¬ìŠ¤ ì´ˆê¸°í™”
         // deviceName = "HC-06";
         // try
         // {
@@ -93,14 +89,14 @@ public class SerialCommunicator : MonoBehaviour
         // {
         //     // gameObject.SetActive(false);
         // }
-        
+
         //StartCoroutine(Send());
-        #endregion ºí·çÅõ½º ÃÊ±âÈ­
+        #endregion ë¸”ë£¨íˆ¬ìŠ¤ ì´ˆê¸°í™”
 
     }
-    
+
     /// <summary>
-    /// ºí·çÅõ½º ¼Û½Å
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Û½ï¿½
     /// </summary>
     // IEnumerator Send()
     // {
@@ -116,15 +112,16 @@ public class SerialCommunicator : MonoBehaviour
     //         yield return new WaitForSeconds(0.5f);
     //     }
     // }
-    
+
     private void OnDestroy()
     {
-        serial.Close();
+        // serial.Close();
+        sendThread.Abort();
     }
 
     public void SendThread()
     {
-        serial.Open();
+        // serial.Open();
 
         while (true)
         {
@@ -134,42 +131,30 @@ public class SerialCommunicator : MonoBehaviour
             string msg = $"<{pressure1},{pressure2},{pressure3}>";
             try
             {
-                if (serial.IsOpen)
-                {
-                    serial.Write(msg);
-                    //Debug.Log(msg);
-                }
-                else
-                {
-                    serial.Open();
-                    Debug.LogWarning($"serial reopen");
-                }
+                serialController.SendSerialMessage(msg);
 
                 Thread.Sleep(200);
             }
             catch (Exception e)
             {
                 Debug.LogError($"sendError : {e}");
-                if (!serial.IsOpen)
-                {
-                    serial.Open();
-                }
             }
         }
 
-        serial.Close();
+        // serial.Close();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (serial.IsOpen)
-        {
-            string recvMsg = serial.ReadLine();
-            Debug.Log($"recvMsg  : {recvMsg}");
-        }
-        
-        // ºí·çÅõ½º ¼ö½Å
+        ReadMessage();
+        // if (serial.IsOpen)
+        // {
+        //     string recvMsg = serial.ReadLine();
+        //     Debug.Log($"recvMsg  : {recvMsg}");
+        // }
+
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         // if (helper.Available)
         // {
         //     string msg = helper.Read();
@@ -204,5 +189,42 @@ public class SerialCommunicator : MonoBehaviour
     void OnConnFailed()
     {
         Debug.Log("NO Connection");
+    }
+
+    void ReadMessage()
+    {
+        string message = serialController.ReadSerialMessage();
+        if (message == null)
+            return;
+
+        if (ReferenceEquals(message, SerialController.SERIAL_DEVICE_CONNECTED))
+            Debug.Log("Connection established");
+        else if (ReferenceEquals(message, SerialController.SERIAL_DEVICE_DISCONNECTED))
+            Debug.Log("Connection attempt failed or disconnection detected");
+        else
+        {
+            if (message[0] == '#')
+                DecryptMessage(message);
+            else
+                Debug.Log("System message : " + message);
+        }
+    }
+    void DecryptMessage(string message)
+    {
+
+        string[] emgDatas = message.Split(',');
+        //Vector3 inputVector = new Vector3(-float.Parse(s[2]), float.Parse(s[0]), float.Parse(s[1]));
+        int grabEmg = Convert.ToInt32(emgDatas[1]);
+        int pickEmg = Convert.ToInt32(emgDatas[2]);
+        Debug.Log($"recv grabEmg : {grabEmg} / pickEmg : {pickEmg}");
+        emgSO.PushData(EMG_SO.EMGType.GRAB, grabEmg);
+        emgSO.PushData(EMG_SO.EMGType.PICK, pickEmg);
+        String msg = grabEmg.ToString() + ", " + pickEmg.ToString();
+        UpdateReceivedData(msg);
+    }
+
+    private void UpdateReceivedData(String msg)
+    {
+        Debug.Log($"recv Data : {msg}");
     }
 }
