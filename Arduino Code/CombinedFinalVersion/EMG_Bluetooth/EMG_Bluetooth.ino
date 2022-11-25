@@ -154,7 +154,7 @@ void MotorControl() {
   msg += String(analogRead(A4)) + "/";
 
   // write 서보모터의 각도 입력값을 서서히 증가시키는 방식으로 탄성력 구현해야함
-  int delay_value = 200;  // milliseconds
+  int delay_value = 500;  // milliseconds
 
   int targetServoAngles[3];   // 목표 각도
   int currentServoAngles[3];  // 서보모터의 현재 각도
@@ -170,7 +170,7 @@ void MotorControl() {
 
 
 
-    const int space = 1;
+    int space = 1;
     for (int i = 0; i < 3; i++) { // 엄지만 우선 사용
       int servoSpeed = pressure[i] * 0.1;
       //targetServoAngles[i] = potentAngle[i];//+ (100 - pressure[i]) * 0.05;  // 압력이 높을 수록 서보모터를 나사에 붙임. 수정 필요
@@ -180,21 +180,57 @@ void MotorControl() {
       //      servo[i].attach(i + 2);                 // 서보모터 떨림 방지 : attach-detach
       //      servo[i].write(potentAngle[i]);  // 서보에 현재 각도를 반영
 
-      if (pressure[i] > 0 && !isPress[i])
+
+
+      if (pressure[i] > 0) // 압력이 있을 경우
       {
         isPress[i] = true;
+        space = 20 - (pressure[i] * 0.1f);
         //pressAngle = potentAngle[i];
-        potenTest[i] = potentAngle[i];
+        //potenTest[i] = potentAngle[i];
         //Serial.println(String(potentAngle[i]) + ",");
         servo[i].write(potentAngle[i] + space);
 
       }
-      if (pressure[i] <= 0 && isPress[i])
+       else if (pressure[i] <= 0 && isPress[i]) // 압력이 0일 경우(손을 땐 경우)
       {
-        isPress[i] = false;
         servo[i].write(180);
+        isPress[i] = false; 
       }
 
+//      if (pressure[i] > 25 && pressure[i] <= 50) // 압력이 있을 경우
+//      {
+//        isPress[i] = true;
+//        space = 15;
+//        //pressAngle = potentAngle[i];
+//        potenTest[i] = potentAngle[i];
+//        //Serial.println(String(potentAngle[i]) + ",");
+//        servo[i].write(potentAngle[i] + space);
+//
+//      }
+//      if (pressure[i] > 50 && pressure[i] <= 75) // 압력이 있을 경우
+//      {
+//        isPress[i] = true;
+//        space = 7;
+//        //pressAngle = potentAngle[i];
+//        potenTest[i] = potentAngle[i];
+//        //Serial.println(String(potentAngle[i]) + ",");
+//        servo[i].write(potentAngle[i] + space);
+//
+//      }
+//      if (pressure[i] > 75 && pressure[i] <= 100) // 압력이 있을 경우
+//      {
+//        isPress[i] = true;
+//        space = 2;
+//        //pressAngle = potentAngle[i];
+//        potenTest[i] = potentAngle[i];
+//        //Serial.println(String(potentAngle[i]) + ",");
+//        servo[i].write(potentAngle[i] + space);
+//
+//      }
+
+           
+     
     }
     for (int i = 0; i < 3; i++) {
       msg += "poten: " + String(potenTest[i]) + ", servo: " + String(servo[i].read() - space) + ", ";
