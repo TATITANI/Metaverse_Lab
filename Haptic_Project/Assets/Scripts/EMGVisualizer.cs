@@ -87,7 +87,7 @@ public class EMGVisualizer : MonoBehaviour
 
         ResizeGraph();
 
-        if (/*AppManager.Instance.IsTest*/ true)
+        if (AppManager.Instance.IsTest)
         {
             StartCoroutine(PushDatas_Test());
         }
