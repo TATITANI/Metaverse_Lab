@@ -9,7 +9,7 @@ int Poten_1_Threshold = 1023;
 int Poten_2_Threshold = 1023;
 int Poten_3_Threshold = 1023;
 
-int potenTest[3]={10,10,10};
+int potenTest[3] = {10, 10, 10};
 ////// 모터제어
 #include <Servo.h>  // 서보모터 라이브러리 포함
 
@@ -121,7 +121,7 @@ float Map(float currentValue, float currentStart, float currentEnd, float target
   float ratio = abs( (currentValue - currentStart) / (currentEnd - currentStart));
 
   float mappedValue = targetStart + ratio * (targetEnd - targetStart);
-  
+
   return mappedValue;
 }
 
@@ -129,7 +129,7 @@ float Map(float currentValue, float currentStart, float currentEnd, float target
 Servo servo[3];  // 서보모터를 배열로 정의
 unsigned long lastMotorUpdatedTime = 0;
 int testPressID = 0;
-bool isPress[3] = {false,false,false};
+bool isPress[3] = {false, false, false};
 int pressAngle; // 눌렀을 떄 최초 나사각도
 void MotorControl() {
 
@@ -170,7 +170,7 @@ void MotorControl() {
 
 
 
-    const int space = 5;
+    const int space = 1;
     for (int i = 0; i < 3; i++) { // 엄지만 우선 사용
       int servoSpeed = pressure[i] * 0.1;
       //targetServoAngles[i] = potentAngle[i];//+ (100 - pressure[i]) * 0.05;  // 압력이 높을 수록 서보모터를 나사에 붙임. 수정 필요
@@ -179,14 +179,14 @@ void MotorControl() {
       //currentServoAngles[i] = Clamp(currentServoAngles[i], 0, 180);
       //      servo[i].attach(i + 2);                 // 서보모터 떨림 방지 : attach-detach
       //      servo[i].write(potentAngle[i]);  // 서보에 현재 각도를 반영
-      
+
       if (pressure[i] > 0 && !isPress[i])
       {
         isPress[i] = true;
         //pressAngle = potentAngle[i];
-        potenTest[i]=potentAngle[i];
+        potenTest[i] = potentAngle[i];
         //Serial.println(String(potentAngle[i]) + ",");
-        servo[i].write(potentAngle[i]+space); //pressAngle +
+        servo[i].write(potentAngle[i] + space);
 
       }
       if (pressure[i] <= 0 && isPress[i])
@@ -194,16 +194,11 @@ void MotorControl() {
         isPress[i] = false;
         servo[i].write(180);
       }
-      //servo[i].write(isPress[i] ?  pressAngle+5 : 180); //pressAngle +
-      //msg += String(pressure[i]) + ",";
-      //msg += analogRead(A2);
-      //      msg += String(servo[i].read()) + ", " + String(potentAngle[i]) + " / ";
+
     }
-    for(int i = 0; i<3; i++){
-      msg+= "poten: "+String(potenTest[i])+", servo: "+String(servo[i].read()-space)+", ";
+    for (int i = 0; i < 3; i++) {
+      msg += "poten: " + String(potenTest[i]) + ", servo: " + String(servo[i].read() - space) + ", ";
     }
-    //Serial.println(msg);
-    //Serial.println(currentServoAngles[0]);
 
     lastMotorUpdatedTime = millis();
 
@@ -253,8 +248,16 @@ void RecvData() {
   Serial.flush();
 }
 
+const int delayEMG_Micro = 50;
+int lastTimeEMG = 0;
 // EMG 블루투스 전송
 void SendData() {
+
+  if (micros() - lastTimeEMG < delayEMG_Micro)
+  {
+    return;
+  }
+
   // In order to make sure the ADC sample frequence on arduino,
   // the time cost should be measured each loop
   /*------------start here-------------------*/
@@ -262,7 +265,7 @@ void SendData() {
 
   int Value = analogRead(SensorInputPin);
   //SensorInputPin_1
-  int Value_1 = 0; //analogRead(SensorInputPin_1);
+  int Value_1 = analogRead(SensorInputPin_1);
 
   // filter processing
   int DataAfterFilter = myFilter.update(Value);
@@ -276,29 +279,29 @@ void SendData() {
   envlope_1 = (envlope_1 > Threshold_Min_1) ? envlope_1 : 0;
 
   timeStamp = micros() - timeStamp;
-  if (TIMING_DEBUG) {
 
-    //if(envlope !=0 && envlope<Threshold_Max){
-    if (envlope < Threshold_Max || envlope_1 < Threshold_Max_1) {
-      //Serial.println("DATA,TIME,TIMER," + String(millis()*0.001));
+  //if(envlope !=0 && envlope<Threshold_Max){
+  if (envlope < Threshold_Max || envlope_1 < Threshold_Max_1) {
+    //Serial.println("DATA,TIME,TIMER," + String(millis()*0.001));
 
-      String str_envlope = String(envlope);
-      String str_envlope_1 = String(envlope_1);
+    String str_envlope = String(envlope);
+    String str_envlope_1 = String(envlope_1);
 
-      sendData = str_envlope + ',' + str_envlope_1;
-
-      char* a = new char[sendData.length() + 1];
-      strcpy(a, sendData.c_str());
-      //delay(200);  //excels
-      if (maxEMG < envlope) {
-        maxEMG = envlope;  //최대값 maxEMG
-      }
-      count++;
-      sum = sum + envlope;
-      Serial.write(a);
-      //mySerial.println(a);  // 전송
-      delete a;
+    //sendData = str_envlope + ',' + str_envlope_1;
+    sendData = "#, " + str_envlope + ',' + str_envlope_1;  //유니티용
+    char* a = new char[sendData.length() + 1];
+    strcpy(a, sendData.c_str());
+    //delay(200);  //excels
+    if (maxEMG < envlope) {
+      maxEMG = envlope;  //최대값 maxEMG
     }
+    count++;
+    sum = sum + envlope;
+
+    Serial.println(a);
+
+    delete a;
+    lastTimeEMG  = micros();
 
     // Serial.println("Filters cost time: " + String(timeStamp));
     // the filter cost average around 520 us
@@ -323,21 +326,21 @@ void Init() {
     //    servo[i].detach();
   }
 }
-void RecvData2(){
+void RecvData2() {
   while (Serial.available()) {
-      char x = Serial.read();
-      //패킷 시작 문자열 초기화
-      if (x == startMarker) {
-        recvData = "";
-      }
-      // 패킷 종료시 전송
-      else if (x == endMarker) {
-        parseData();
-      } else {
-        recvData += x;
-      }
+    char x = Serial.read();
+    //패킷 시작 문자열 초기화
+    if (x == startMarker) {
+      recvData = "";
     }
-    Serial.flush();
+    // 패킷 종료시 전송
+    else if (x == endMarker) {
+      parseData();
+    } else {
+      recvData += x;
+    }
+  }
+  Serial.flush();
 }
 
 void loop() {
@@ -351,7 +354,7 @@ void loop() {
   RecvData2();
   MotorControl();
 
-  //SendData();
+  SendData();
 
   // put your main code here, to run repeatedly:
   delayMicroseconds(100);
