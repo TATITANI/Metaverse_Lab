@@ -38,37 +38,5 @@ public class Grabbable : MonoBehaviour
 
         // controllerSO.ResetFingerPressure();
     }
-
-    // public void OnGrab()
-    // {
-    //     RaycastHit hit;
-    //     foreach (var hand in interaction.graspingHands)
-    //     {
-    //         if(hand.isLeft)
-    //             continue;
-    //         
-    //         HandPivot rightHandPivot = controller.rightHandPivot;
-    //
-    //         var pivots = rightHandPivot.Pivots;
-    //         for (int fingerID = 0; fingerID < pivots.Length; fingerID++)
-    //         {
-    //             Vector3 dir = rightHandPivot.GetGrabDir(fingerID);
-    //             Ray ray = new Ray(pivots[fingerID].position, dir);
-    //             if (Physics.Raycast(ray, out hit, 0.001f))
-    //             {
-    //                 if (hit.collider.gameObject == this.gameObject)
-    //                 {
-    //                     // 직접 닿은 표면에 압력을 주기 위해서
-    //                     // 충돌점으로부터 법선벡터 쪽으로 약간 올라간 좌표를 입력. 
-    //                     const float hitPointOffset = 0.05f;
-    //                     Vector3 contctPos = hit.point + hit.normal * hitPointOffset;
-    //
-    //                     grabPos.fingerID = fingerID;
-    //                     grabPos.pos = contctPos;
-    //                     eventGrab?.Invoke(grabPos);
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
+  
 }

@@ -7,7 +7,6 @@ using UnityEngine.Events;
 public class AppManager : MonoBehaviour
 {
     private static AppManager _instance;
-
     public static AppManager Instance
     {
         get
@@ -31,8 +30,22 @@ public class AppManager : MonoBehaviour
         get { return isTest; }
     }
 
+    public enum Stage
+    {
+        BALL=0,
+        BOARD=1
+    };
+    
+    private Stage currentStage = Stage.BALL;
+    [SerializeField] private Animator cameraAni;
     private void Awake()
     {
         Application.targetFrameRate = targetFrame;
+    }
+
+    public void ChangeStage()
+    {
+        currentStage = currentStage == Stage.BOARD ? Stage.BALL : Stage.BOARD;
+        cameraAni.SetInteger("State", (int)currentStage);
     }
 }

@@ -2,16 +2,12 @@ using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter))]
-public class ElasticBody : MonoBehaviour
+public class ElasticBody : Body
 {
-    private Camera cam;
-    [SerializeField] private HandControllerSO controllerSO;
     private Mesh mesh;
     private MeshCollider meshCollider;
 
     private Vector3[] initVertices, vertices, velocities, normals;
-
-    private const float maxElasticity = 20;
 
     // 탄성
     /*[Range(0,maxElasticity)]*/
@@ -51,40 +47,19 @@ public class ElasticBody : MonoBehaviour
 #if UNITY_EDITOR
         ProcessInput();
 #endif
-
-        Restore();
-        Damping();
-        UpdateVertex();
-        if (isDeformed)
+        if (elasticity > 0)
         {
-            UpdateMesh();
-        }
-    }
-
-    void ProcessInput()
-    {
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-
-        if (Input.GetMouseButton(0))
-        {
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
+            Restore();
+            Damping();
+            UpdateVertex();
+            if (isDeformed)
             {
-                if (hit.collider.gameObject == this.gameObject)
-                {
-                    // 직접 닿은 표면에 압력을 주기 위해서
-                    // 충돌점으로부터 법선벡터 쪽으로 약간 올라간 좌표를 입력. 
-                    const float hitPointOffset = 0.1f;
-                    Vector3 point = hit.point + hit.normal * hitPointOffset;
-                    Press(0, point);
-                    //
-                }
-                //
+                UpdateMesh();
             }
         }
     }
 
-    public void Press(int fingerId, Vector3 pos)
+    public override void Press(int fingerId, Vector3 pos)
     {
         // world -> local
         Vector3 contactLocalPos = transform.InverseTransformPoint(pos);

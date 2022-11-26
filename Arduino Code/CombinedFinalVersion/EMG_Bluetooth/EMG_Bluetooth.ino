@@ -9,7 +9,7 @@ int Poten_1_Threshold = 1023;
 int Poten_2_Threshold = 1023;
 int Poten_3_Threshold = 1023;
 
-int potenTest[3] = {10, 10, 10};
+int potenTest[3] = { 10, 10, 10 };
 ////// 모터제어
 #include <Servo.h>  // 서보모터 라이브러리 포함
 
@@ -29,7 +29,7 @@ EMGFilters myFilter;
 // discrete filters must works with fixed sample frequence
 // our emg filter only support "SAMPLE_FREQ_500HZ" or "SAMPLE_FREQ_1000HZ"
 // other sampleRate inputs will bypass all the EMG_FILTER
-int sampleRate = 500;//SAMPLE_FREQ_500HZ;
+int sampleRate = 500;  //SAMPLE_FREQ_500HZ;
 // For countries where power transmission is at 50 Hz
 // For countries where power transmission is at 60 Hz, need to change to
 // "NOTCH_FREQ_60HZ"
@@ -95,7 +95,7 @@ void setup() {
   Serial.begin(9600);
   mySerial.begin(9600);
 
-  myFilter.init((SAMPLE_FREQUENCY) sampleRate, (NOTCH_FREQUENCY)humFreq, true, true, true);
+  myFilter.init((SAMPLE_FREQUENCY)sampleRate, (NOTCH_FREQUENCY)humFreq, true, true, true);
   // setup for time cost measure
   // using micros()
   timeBudget = 1e6 / sampleRate;
@@ -118,7 +118,7 @@ float Clamp(float value, float low, float high) {
 
 
 float Map(float currentValue, float currentStart, float currentEnd, float targetStart, float targetEnd) {
-  float ratio = abs( (currentValue - currentStart) / (currentEnd - currentStart));
+  float ratio = abs((currentValue - currentStart) / (currentEnd - currentStart));
 
   float mappedValue = targetStart + ratio * (targetEnd - targetStart);
 
@@ -129,27 +129,27 @@ float Map(float currentValue, float currentStart, float currentEnd, float target
 Servo servo[3];  // 서보모터를 배열로 정의
 unsigned long lastMotorUpdatedTime = 0;
 int testPressID = 0;
-bool isPress[3] = {false, false, false};
-int lastServoAngle[3] = {0,0,0};
+bool isPress[3] = { false, false, false };
+int lastServoAngle[3] = { 0, 0, 0 };
 void MotorControl() {
 
   //테스트코드
   int testPress[10] = { 30, 30, 30, 50, 50, 50, 0, 0, 20, 20 };
 
   // 가변저항
-  int potentiometer_value[3];                                // 가변저항 값
+  int potentiometer_value[3];  // 가변저항 값
   // analogdRead) : 가변저항 0~1023범위
   potentiometer_value[0] = Clamp(analogRead(A2), 600, 1013);  // (엄지: A2), 손가락을 최대한 위로 땅겼을 때,손가락을 최대한 쥐었을 때
-  potentiometer_value[1] = Clamp(analogRead(A3), 331, 950);  // (검지: A3)
+  potentiometer_value[1] = Clamp(analogRead(A3), 331, 950);   // (검지: A3)
   potentiometer_value[2] = Clamp(analogRead(A4), 477, 1023);  // (중지: A4)
 
-  int potentAngle[3];  // 가변저항 나사 각도
-  potentAngle[0] = Map(potentiometer_value[0], 1013, 600, 20, 180); // 손풀었을 때 가변저항, 쥐었을 때 가변저항, 풀었을 때 각도, 쥐었을 때 각도
+  int potentAngle[3];                                                // 가변저항 나사 각도
+  potentAngle[0] = Map(potentiometer_value[0], 1013, 600, 20, 180);  // 손풀었을 때 가변저항, 쥐었을 때 가변저항, 풀었을 때 각도, 쥐었을 때 각도
   potentAngle[1] = Map(potentiometer_value[1], 950, 331, 20, 180);
   potentAngle[2] = Map(potentiometer_value[2], 1023, 477, 20, 180);
 
   String msg = "";
-  msg += String(analogRead(A2))  + "," ;
+  msg += String(analogRead(A2)) + ",";
   msg += String(analogRead(A3)) + ",";
   msg += String(analogRead(A4)) + "/";
 
@@ -166,7 +166,7 @@ void MotorControl() {
     //testPressID = testPressID == 9 ? 0 : testPressID + 1;
     ///testEnd
 
-    for (int i = 0; i < 3; i++) { // 엄지만 우선 사용
+    for (int i = 0; i < 3; i++) {  // 엄지만 우선 사용
       int servoSpeed = pressure[i] * 0.1;
       //targetServoAngles[i] = potentAngle[i];//+ (100 - pressure[i]) * 0.05;  // 압력이 높을 수록 서보모터를 나사에 붙임. 수정 필요
       // 서보모터 목표각도로 현재 각도이동
@@ -174,25 +174,23 @@ void MotorControl() {
       //currentServoAngles[i] = Clamp(currentServoAngles[i], 0, 180);
       //      servo[i].attach(i + 2);                 // 서보모터 떨림 방지 : attach-detach
 
-      if (pressure[i] > 0) // 압력이 있을 경우
+      if (pressure[i] > 0)  // 압력이 있을 경우
       {
         isPress[i] = true;
-        int space =  (100- pressure[i]) * 0.1f;
-        
-        if (potentAngle[i] >= lastServoAngle[i]-10) // 부딪혔을 떄 이동
+        int space = (100 - pressure[i]) * 0.1f;
+
+        if (potentAngle[i] >= lastServoAngle[i] - 10)  // 부딪혔을 떄 이동
         {
-          lastServoAngle[i] = Clamp(potentAngle[i] + space,potentAngle[i],potentAngle[i]+5);
+          lastServoAngle[i] = Clamp(potentAngle[i] + space, potentAngle[i], potentAngle[i] + 5);
           servo[i].write(lastServoAngle[i]);
         }
 
-      }
-      else if (pressure[i] <= 0 && isPress[i]) // 압력이 0일 경우(손을 땐 경우)
+      } else if (pressure[i] <= 0 && isPress[i])  // 압력이 0일 경우(손을 땐 경우)
       {
-        lastServoAngle[i] = 0; // 리셋
+        lastServoAngle[i] = 0;  // 리셋
         servo[i].write(180);
         isPress[i] = false;
       }
-
     }
 
     lastMotorUpdatedTime = millis();
@@ -296,7 +294,7 @@ void SendData() {
     Serial.println(a);
 
     delete a;
-    lastTimeEMG  = micros();
+    lastTimeEMG = micros();
 
     // Serial.println("Filters cost time: " + String(timeStamp));
     // the filter cost average around 520 us
@@ -305,17 +303,18 @@ void SendData() {
 
 bool isInit = false;
 void Init() {
-  servo[0].attach(9);  // 엄지
+  const int angleInit = 120;
+  servo[0].attach(9);   // 엄지
   servo[1].attach(10);  // 검지
   servo[2].attach(11);  // 중지
-  for (int i = 0; i < 3; i++) {
-    servo[i].write(180);
-  }
-  //  while (servo[0].read() < 180 || servo[0].read() < 180 || servo[0].read() < 180)
-  while (servo[0].read() < 180 || servo[0].read() < 180 || servo[0].read() < 180)
-  {
-    delay(100);
-  }
+  // servo[2].write(150);
+  // for (int i = 0; i < 3; i++) {
+  //   servo[i].write(angleInit);
+  // }
+  // servo[0].write(50); // 고장
+  // while (/*servo[0].read() < angleInit ||*/ servo[1].read() != angleInit || servo[2].read() != angleInit) {
+  //   delay(100);
+  // }
   //Serial.println("init finish");
   for (int i = 0; i < 3; i++) {
     //    servo[i].detach();
@@ -338,18 +337,56 @@ void RecvData2() {
   Serial.flush();
 }
 
+int lastTestAngle = 0;
+void TestMotor() {
+  // 가변저항
+  int potentiometer_value[3];  // 가변저항 값
+  // analogdRead) : 가변저항 0~1023범위
+  potentiometer_value[0] = Clamp(analogRead(A2), 600, 1013);  // (엄지: A2), 손가락을 최대한 위로 땅겼을 때,손가락을 최대한 쥐었을 때
+  potentiometer_value[1] = Clamp(analogRead(A3), 331, 950);   // (검지: A3)
+  potentiometer_value[2] = Clamp(analogRead(A4), 477, 1023);  // (중지: A4)
+
+  int potentAngle[3];                                                // 가변저항 나사 각도
+  potentAngle[0] = Map(potentiometer_value[0], 1013, 600, 30, 170);  // 손풀었을 때 가변저항, 쥐었을 때 가변저항, 풀었을 때 각도, 쥐었을 때 각도
+  potentAngle[1] = Map(potentiometer_value[1], 950, 331, 20, 170);
+  potentAngle[2] = Map(potentiometer_value[2], 1023, 477, 20, 170);
+
+  String msg = "";
+  msg += String(analogRead(A2)) + ",";
+  msg += String(analogRead(A3)) + ",";
+  msg += String(analogRead(A4)) + "/";
+
+  // write 서보모터의 각도 입력값을 서서히 증가시키는 방식으로 탄성력 구현해야함
+  int delayMotor = 200;  // milliseconds
+
+  // 가변저항이 튀면서 서보모터 멀리나감
+  // 1번 모터 : 가변저항 나사각도 차이1. 가변저항 +5 스톱. 최소 +8로 해야 밀림.
+  // 2번 모터 : 가변저항 나사각도 차이 5.
+  // if (millis() - lastMotorUpdatedTime > delayMotor) {
+
+  //   Serial.println(String(potentAngle[1]) + " / " + String(lastTestAngle));
+  //   int press = 5;
+  //   if (potentAngle[1] >= lastTestAngle-5) { 
+  //     lastTestAngle = Clamp(potentAngle[1] + press, 20, lastTestAngle + press);
+  //     servo[1].write(lastTestAngle);
+  //   }
+  //   lastMotorUpdatedTime = millis();
+  // }
+}
+
 void loop() {
   if (!isInit) {
-    Init();
+     Init();
     isInit = true;
   }
 
+  //TestMotor();
   //InputTest();
   //RecvData();
-  RecvData2();
-  MotorControl();
+  //RecvData2();
+  //MotorControl();
 
-  SendData();
+  //SendData();
 
   // put your main code here, to run repeatedly:
   delayMicroseconds(100);

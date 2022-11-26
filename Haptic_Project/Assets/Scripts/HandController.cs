@@ -28,8 +28,9 @@ public class HandController : MonoBehaviour
     /// 구분 이유 : 손으로 물체를 누르면 순간적으로 충돌지점이
     /// press 범위를 벗어나 press가 0이 되는 현상 방지
     /// </summary>
-    [SerializeField] private float touchCheckingPosOffset = 0.01f; 
-    [SerializeField] private float pressCheckingDistance = 0.01f; 
+    [SerializeField] private float touchCheckingPosOffset = 0.01f;
+
+    [SerializeField] private float pressCheckingDistance = 0.01f;
     [SerializeField] private float touchRange = 2; // 터치 판정 조정
 
 
@@ -47,7 +48,7 @@ public class HandController : MonoBehaviour
             {
                 if (Vector3.Distance(rayStartPos, hit.point) < pressCheckingDistance)
                 {
-                    ElasticBody elasticBody = hit.transform.GetComponent<ElasticBody>();
+                    Body elasticBody = hit.transform.GetComponent<Body>();
                     if (!ReferenceEquals(elasticBody, null))
                     {
                         // 직접 닿은 표면에 압력을 주기 위해서
@@ -56,6 +57,11 @@ public class HandController : MonoBehaviour
                         Vector3 contactPos = hit.point + hit.normal * hitPointOffset;
 
                         elasticBody.Press(fingerID, contactPos);
+                    }
+                    else if (hit.transform.name == "StateButton")
+                    {
+                        hit.transform.GetComponent<Animator>().Play("btnDown");
+                        AppManager.Instance.ChangeStage();
                     }
                 }
             }
@@ -68,5 +74,4 @@ public class HandController : MonoBehaviour
             Debug.DrawLine(rayStartPos, rayStartPos + pressCheckingDistance * touchRange * dir, Color.blue);
         }
     }
-   
 }
