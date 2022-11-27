@@ -48,20 +48,24 @@ public class HandController : MonoBehaviour
             {
                 if (Vector3.Distance(rayStartPos, hit.point) < pressCheckingDistance)
                 {
-                    Body elasticBody = hit.transform.GetComponent<Body>();
-                    if (!ReferenceEquals(elasticBody, null))
+                    Body body = hit.transform.GetComponent<Body>();
+                    if (!ReferenceEquals(body, null))
                     {
                         // 직접 닿은 표면에 압력을 주기 위해서
                         // 충돌점으로부터 법선벡터 쪽으로 약간 올라간 좌표를 입력. 
                         const float hitPointOffset = 0.01f;
                         Vector3 contactPos = hit.point + hit.normal * hitPointOffset;
 
-                        elasticBody.Press(fingerID, contactPos);
+                        body.Press(fingerID, contactPos);
                     }
                     else if (hit.transform.name == "StateButton")
                     {
-                        hit.transform.GetComponent<Animator>().Play("btnDown");
-                        AppManager.Instance.ChangeStage();
+                        Animator btnAni = hit.transform.GetComponent<Animator>();
+                        if(btnAni.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
+                        {
+                            btnAni.Play("btnDown");
+                            AppManager.Instance.ChangeStage();
+                        }
                     }
                 }
             }

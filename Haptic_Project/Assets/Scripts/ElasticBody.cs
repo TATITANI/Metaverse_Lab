@@ -10,8 +10,7 @@ public class ElasticBody : Body
     private Vector3[] initVertices, vertices, velocities, normals;
 
     // 탄성
-    /*[Range(0,maxElasticity)]*/
-    [SerializeField] float elasticity = 5f;
+    [Range(1,99)] [SerializeField] int elasticity = 5;
 
     // 누르는 압력
     [Min(0)] [SerializeField] float power = 5f;
@@ -26,9 +25,9 @@ public class ElasticBody : Body
 
     private float initVertexSqrMag;
 
-    private void Start()
+    protected override void Start()
     {
-        cam = Camera.main;
+        base.Start();
 
         mesh = GetComponent<MeshFilter>().mesh;
         meshCollider = GetComponent<MeshCollider>();
@@ -42,7 +41,7 @@ public class ElasticBody : Body
         initVertexSqrMag = initVertices[0].sqrMagnitude;
     }
 
-    private void Update()
+    protected override void Update()
     {
 #if UNITY_EDITOR
         ProcessInput();
@@ -130,4 +129,17 @@ public class ElasticBody : Body
         mesh.RecalculateTangents();
         meshCollider.sharedMesh = mesh;
     }
+
+    protected override void OnGrabBegin()
+    {
+        controllerSO.SetGrab(true, elasticity);
+    }
+
+    protected override void OnGrabEnd()
+    {
+        controllerSO.SetGrab(false);
+        // controllerSO.ResetFingerPressure();
+    }
+
+
 }

@@ -2,15 +2,21 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Leap.Unity.Interaction;
 
+[RequireComponent(typeof(InteractionBehaviour))]
 public class Body : MonoBehaviour
 {
     protected Camera cam;
     [SerializeField] protected HandControllerSO controllerSO;
+    protected InteractionBehaviour interaction;
 
-    private void Start()
+    protected virtual void Start()
     {
+        interaction = GetComponent<InteractionBehaviour>();
         cam = Camera.main;
+        interaction.OnGraspBegin = OnGrabBegin;
+        interaction.OnGraspEnd = OnGrabEnd;
     }
 
     protected virtual void Update()
@@ -46,5 +52,17 @@ public class Body : MonoBehaviour
     public virtual void Press(int fingerId, Vector3 pos)
     {
         controllerSO.SetFingerPressure(fingerId, 1);
+    }
+
+    protected virtual void OnGrabBegin()
+    {
+        // 강체 탄성계수 0
+        controllerSO.SetGrab(true, 0);
+    }
+
+    protected virtual void OnGrabEnd()
+    {
+        controllerSO.SetGrab(false);
+        // controllerSO.ResetFingerPressure();
     }
 }

@@ -9,34 +9,34 @@ using UnityEngine.Events;
 [RequireComponent(typeof(InteractionBehaviour))]
 public class Grabbable : MonoBehaviour
 {
-    [SerializeField] private HandControllerSO controllerSO;
-    private HandController controller;
-    private InteractionBehaviour interaction;
+    //[SerializeField] private HandControllerSO controllerSO;
+    //private HandController controller;
+    //private InteractionBehaviour interaction;
 
-    // [SerializeField] private UnityEvent<GrabPos> eventGrab;
-    // private GrabPos grabPos = new GrabPos();
+    //// [SerializeField] private UnityEvent<GrabPos> eventGrab;
+    //// private GrabPos grabPos = new GrabPos();
 
-    private void Start()
-    {
-        interaction = GetComponent<InteractionBehaviour>();
-        // controller = AppManager.Instance.handController;
-        interaction.OnGraspBegin = OnGrabBegin;
-        //interaction.OnGraspStay = OnGrab;
-        interaction.OnGraspEnd = OnGrabEnd;
-    }
+    //private void Start()
+    //{
+    //    interaction = GetComponent<InteractionBehaviour>();
+    //    // controller = AppManager.Instance.handController;
+    //    interaction.OnGraspBegin = OnGrabBegin;
+    //    //interaction.OnGraspStay = OnGrab;
+    //    interaction.OnGraspEnd = OnGrabEnd;
+    //}
 
-    public void OnGrabBegin()
-    {
-        controllerSO.isGrab = true;
-        //SerialCommunicator.Instance.SendDummy("<1,1,1>");
-    }
+    //public void OnGrabBegin()
+    //{
+    //    controllerSO.SetGrab(true);
+    //    //SerialCommunicator.Instance.SendDummy("<1,1,1>");
+    //}
 
-    public void OnGrabEnd()
-    {
-        controllerSO.isGrab = false;
-        //SerialCommunicator.Instance.SendDummy("<0,0,0>");
+    //public void OnGrabEnd()
+    //{
+    //    controllerSO.SetGrab(false);
+    //    //SerialCommunicator.Instance.SendDummy("<0,0,0>");
 
-        // controllerSO.ResetFingerPressure();
-    }
-  
+    //    // controllerSO.ResetFingerPressure();
+    //}
+
 }

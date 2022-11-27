@@ -128,11 +128,11 @@ public class SerialCommunicator : MonoBehaviour
             int pressure1 = (int)(handControllerSo.pressureRight[0].fingerPressure * 100);
             int pressure2 = (int)(handControllerSo.pressureRight[1].fingerPressure * 100);
             int pressure3 = (int)(handControllerSo.pressureRight[2].fingerPressure * 100);
-            string msg = $"<{pressure1},{pressure2},{pressure3}>";
+            int elasticity = handControllerSo.Elasticity;
+            string msg = $"<{pressure1},{pressure2},{pressure3},{elasticity}>";
             try
             {
                 serialController.SendSerialMessage(msg);
-
                 Thread.Sleep(500);
             }
             catch (Exception e)

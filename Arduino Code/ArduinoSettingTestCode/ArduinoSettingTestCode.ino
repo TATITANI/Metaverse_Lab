@@ -43,7 +43,7 @@ void MotorControl() {
   Serial.print(String(servo[1].read())+"/");
   Serial.println(String(servo[2].read()));
   delay(100);
-}
+} 
 
 void setup() {
   // put your setup code here, to run once:
@@ -109,7 +109,7 @@ void Init() {
   servo[0].attach(9);  // 엄지
   servo[1].attach(10);  // 검지
   servo[2].attach(11);  // 중지
-  for (int i = 0; i < 1; i++) {
+  for (int i = 0; i < 3; i++) {
     servo[i].write(180);
   }
   //  while (servo[0].read() < 180 || servo[0].read() < 180 || servo[0].read() < 180)
