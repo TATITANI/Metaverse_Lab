@@ -223,10 +223,10 @@ MonoBehaviour:
     m_SaveData: []
   m_SceneHierarchy:
     m_TreeViewState:
-      scrollPos: {x: 0, y: 27}
-      m_SelectedIDs: 7e7b0200
-      m_LastClickedID: 162686
-      m_ExpandedIDs: a672fdff5874fdffde79fdff2aabfdff9ecafdff5ad4fdff98e4fdffeaf8fdff4227feff6c27feff2c2afefff034feffda98feff069cfefff67effff827fffff8a7fffff2a80ffff2e80ffffc481ffffc4e3ffffc8e3ffff3ce8ffff16efffff2afbffff94830000bed50000e0d50000fccc010012cd0100cecd0100f8cf0100761d0200941d0200ea1f02000a200200d22102006a7b02009e7b0200a67b0200047c0200127c02003c7c0200527c0200607c0200947d0200f87d0200
+      scrollPos: {x: 0, y: 523}
+      m_SelectedIDs: b46d0000
+      m_LastClickedID: 0
+      m_ExpandedIDs: 343afcff383afcff1e47fcffd048fcff524efcff6680fcff4c87fcffa672fdff5874fdffde79fdff2aabfdff9ecafdff5ad4fdff98e4fdffeaf8fdff4227feff6c27feff2c2afefff034feffda98feff069cfefff67effff827fffff8a7fffff2a80ffff2e80ffffc481ffffc4e3ffffc8e3ffff3ce8ffff16efffff2afbffff94830000bed50000e0d50000fccc010012cd0100cecd0100f8cf0100761d0200941d0200ea1f02000a200200d22102006a7b02009e7b0200a67b0200047c0200127c02003c7c0200527c0200607c0200947d0200f87d02005c7f0200be1b03002c3d0300603d0300683d0300c63d0300d43d0300223e0300783e03001e410300
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -355,7 +355,7 @@ MonoBehaviour:
       floating: 0
       collapsed: 0
       displayed: 1
-      snapOffset: {x: 0, y: 0}
+      snapOffset: {x: 0, y: 25}
       snapOffsetDelta: {x: 0, y: 0}
       snapCorner: 0
       id: unity-transform-toolbar
@@ -503,9 +503,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 1.9675583, y: 0.8140887, z: 0.30118015}
+    m_Target: {x: 3.0058134, y: 0.37994778, z: 1.1330612}
     speed: 2
-    m_Value: {x: 1.9675583, y: 0.8140887, z: 0.30118015}
+    m_Value: {x: 3.0058134, y: 0.37994778, z: 1.1330612}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -552,13 +552,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.48649314, y: 0.047135238, z: -0.0262786, w: -0.8721653}
+    m_Target: {x: -0.26388085, y: -0.046340313, z: 0.012523714, w: -0.96351117}
     speed: 2
-    m_Value: {x: -0.48642987, y: 0.04712911, z: -0.026275182, w: -0.8720519}
+    m_Value: {x: -0.26384243, y: -0.04633357, z: 0.012521892, w: -0.9633709}
   m_Size:
-    m_Target: 0.8660254
+    m_Target: 1.242194
     speed: 2
-    m_Value: 0.8660254
+    m_Value: 1.242194
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -671,7 +671,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 42678
+  controlID: 58521
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -727,7 +727,7 @@ MonoBehaviour:
     m_LastAppliedPresetName: Default
     m_SaveData: []
   m_SearchFilter:
-    m_NameFilter: 
+    m_NameFilter: emg
     m_ClassNames: []
     m_AssetLabels: []
     m_AssetBundleNames: []
@@ -739,21 +739,21 @@ MonoBehaviour:
     m_SkipHidden: 1
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts
+    - Assets
     m_Globs: []
-    m_OriginalText: 
+    m_OriginalText: emg
   m_ViewMode: 1
-  m_StartGridSize: 16
+  m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scripts
+  - Assets
   m_LastFoldersGridSize: -1
   m_LastProjectPath: D:\SNG\Undergraduate researcher\NewMeta_HapticGloves\Metaverse_Lab\Haptic_Project
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 79}
-    m_SelectedIDs: 5e720000
-    m_LastClickedID: 29278
+    scrollPos: {x: 0, y: 0}
+    m_SelectedIDs: 30720000
+    m_LastClickedID: 29232
     m_ExpandedIDs: 00000000307200003272000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -807,9 +807,9 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 7e7b0200
-    m_LastClickedInstanceID: 162686
-    m_HadKeyboardFocusLastEvent: 0
+    m_SelectedInstanceIDs: b46d0000
+    m_LastClickedInstanceID: 28084
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000a66900008a6600001866000008db0000966c0000946b0000107e00008c8400009484000080840000b2a80000127e00000e7e0000147e0000187e0000167e00001a7e00001c7e0000d47401009869000068cc0000d07700008a0f01006c70000000000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -835,7 +835,7 @@ MonoBehaviour:
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
     m_ScrollPosition: {x: 0, y: 0}
-    m_GridSize: 16
+    m_GridSize: 64
   m_SkipHiddenPackages: 1
   m_DirectoriesAreaWidth: 258
 --- !u!114 &13
@@ -911,8 +911,8 @@ MonoBehaviour:
     y: 0
     width: 452
     height: 947
-  m_MinSize: {x: 276, y: 71}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 16}
   m_Panes:
   - {fileID: 16}
