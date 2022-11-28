@@ -292,8 +292,8 @@ public class UImanager : MonoBehaviour
 
         Task_Grab_EMGAvg = 0f;
         Task_Pickup_EMGAvg = 0f;
-        //Text_Grab_Avg_Task.text = Task_Grab_EMGAvg.ToString("F2");
-        //Text_PickUp_Avg_Task.text = Task_Pickup_EMGAvg.ToString("F2");
+        Text_Grab_Avg_Task.text = Task_Grab_EMGAvg.ToString("F2");
+        Text_PickUp_Avg_Task.text = Task_Pickup_EMGAvg.ToString("F2");
 
         Task_Grab_EMGMax = 0f;
         Task_Pickup_EMGMax = 0f;
