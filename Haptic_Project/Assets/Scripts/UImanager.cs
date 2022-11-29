@@ -108,6 +108,22 @@ public class UImanager : MonoBehaviour
     {
         StartTime();
         UpdatePressure();
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            Task_ResetBtn();
+        }
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            Task_StartPauseBtn();
+        }
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            Contents_ResetBtn();
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            Contents_StartPauseBtn();
+        }
     }
 
     void StartTime()
@@ -204,52 +220,37 @@ public class UImanager : MonoBehaviour
         if (EMG_Task_Active)
         {
             Task_count++;
-            switch (_emgType)
+            //EMG_Contents_Grab
+            Text_Grab_EMG_Task.text = EMG_Contents_Grab.ToString("F2");
+            //합
+            Task_Grab_EMGSum += EMG_Contents_Grab;
+            //평균
+            Task_Grab_EMGAvg = Task_Grab_EMGSum / Task_count;
+            //최대값
+            if (Task_Grab_EMGMax < EMG_Contents_Grab)
+                Task_Grab_EMGMax = EMG_Contents_Grab;
+            Text_Grab_Avg_Task.text = Task_Grab_EMGAvg.ToString("F2");
+
+            if (EMG_Contents_Grab > GrabThreshold) //임계값
             {
-                case EMG_SO.EMGType.GRAB:
-                    EMG_Task_Grab = emg;
-                    
-                    Text_Grab_EMG_Task.text = EMG_Task_Grab.ToString("F2");
-                    //합
-                    Task_Grab_EMGSum += EMG_Task_Grab;
-                    //평균
-                    Task_Grab_EMGAvg = Task_Grab_EMGSum / Task_count;
-                    //최대값
-                    if (Task_Grab_EMGMax < EMG_Task_Grab)
-                        Task_Grab_EMGMax = EMG_Task_Grab;
-                    Text_Grab_Avg_Task.text = Task_Grab_EMGAvg.ToString("F2");
-
-                    if (EMG_Task_Grab > GrabThreshold) //임계값
-                    {
-                        EMG_Count_Grab_Task++;
-                    }
-
-                    //카운트 대신 최대값 출력 테스트
-                    Text_Grab_Count_Task.text = Task_Grab_EMGMax.ToString();
-
-                    break;
-
-                case EMG_SO.EMGType.PICK:
-                    EMG_Task_Pickup = emgSO.emgDatas[_emgType].Peek();
-
-                    Text_PickUp_EMG_Task.text = EMG_Task_Pickup.ToString("F2");
-                    Task_Pickup_EMGSum += EMG_Task_Pickup;
-                    Task_Pickup_EMGAvg = Task_Pickup_EMGSum / Task_count;
-                    if (Task_Pickup_EMGMax < EMG_Task_Pickup)
-                        Task_Pickup_EMGMax = EMG_Task_Pickup;
-                    Text_PickUp_Avg_Task.text = Task_Pickup_EMGAvg.ToString("F2");
-
-                    if (EMG_Task_Pickup > PickupThreshold)
-                    {
-                        EMG_Count_Pickup_Task++;
-                    }
-
-                    Text_PickUp_Count_Task.text = Task_Pickup_EMGMax.ToString();
-                    break;
+                EMG_Count_Grab_Task++;
             }
-            // EMG_Task_Grab = Random.Range(0, 1500);
-            // EMG_Task_Pickup = Random.Range(0, 1500);
-            //Task_Grab_EMGAvg = 0;
+            //EMG_Task_Pickup = emgSO.emgDatas[_emgType].Peek();
+
+            Text_PickUp_EMG_Task.text = EMG_Contents_Pickup.ToString("F2");
+            Task_Pickup_EMGSum += EMG_Contents_Pickup;
+            Task_Pickup_EMGAvg = Task_Pickup_EMGSum / Task_count;
+            if (Task_Pickup_EMGMax < EMG_Contents_Pickup)
+                Task_Pickup_EMGMax = EMG_Contents_Pickup;
+            Text_PickUp_Avg_Task.text = Task_Pickup_EMGAvg.ToString("F2");
+
+            if (EMG_Contents_Pickup > PickupThreshold)
+            {
+                EMG_Count_Pickup_Task++;
+            }
+            Text_Grab_Count_Task.text = Task_Grab_EMGMax.ToString();
+            Text_PickUp_Count_Task.text = Task_Pickup_EMGMax.ToString();
+
         }
     }
 
@@ -277,6 +278,7 @@ public class UImanager : MonoBehaviour
 
     public void Task_ResetBtn()
     {
+        Debug.Log("Reset");
         Task_TimeStart = 0f;
         Text_TaskTimer.text = Task_TimeStart.ToString("F2");
 
