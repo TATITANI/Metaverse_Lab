@@ -22,11 +22,11 @@ public class EMGSpectrogram : MonoBehaviour
     [SerializeField] [Range(0, 1)] private float maxHue = 0.6f; // blue
     private Queue<Complex[]> itemDatas;
     private Vector2Int spectrogramSize;
-
+    private const int windowSize = 16;
     private void Start()
     {
         spectrogramSize = new Vector2Int((int)(1f / SerialCommunicator.Instance.SampleTime),
-            Mathf.CeilToInt(emgSo.capacity / 2));
+              Mathf.CeilToInt(windowSize / 2));
         horLayoutGroup.GetComponent<RectTransform>().sizeDelta =
             blockSize * spectrogramSize;
 
@@ -41,7 +41,7 @@ public class EMGSpectrogram : MonoBehaviour
             spectrogramItems[i] = item;
         }
 
-        emgSo.RegisterOnChangedEvent(UpdateData);
+        StartCoroutine(UpdateCoroutine());
         itemDatas = new Queue<Complex[]>();
 
         txtTitle.text = $"Spectrogram - {emgType.ToString()}";
@@ -70,20 +70,28 @@ public class EMGSpectrogram : MonoBehaviour
         imgColor.material.mainTexture = tex;
     }
 
-    void UpdateData(EMG_SO.EMGType _emgType, int emg)
+    IEnumerator UpdateCoroutine()
     {
-        if (emgType != _emgType)
+        float samplingTime = SerialCommunicator.Instance.sampleTime;
+        yield return new WaitUntil(() => emgSo.emgDatas.ContainsKey(this.emgType));
+        while (true)
+        {
+            UpdateData();
+            yield return new WaitForSeconds(samplingTime * windowSize*0.25f);
+        }
+    }
+    void UpdateData()
+    {
+        if (emgSo.emgDatas[this.emgType].Count < windowSize)
             return;
-
-        if (emgSo.emgDatas[EMG_SO.EMGType.GRAB].Count < emgSo.capacity)
-            return;
-
+        
         double[] emgDatas = GetEMGDatas();
-
+        
         void AddFFT()
         {
-            Complex[] fftResultRaw = FFTGenerator.FFT(emgDatas, 0, emgDatas.Length - 1);
-            int centerID = fftResultRaw.Length - spectrogramSize.y;
+            Complex[] fftResultRaw = FFTGenerator.FFT(emgDatas, 
+                0, windowSize-1);
+            int centerID = fftResultRaw.Length - windowSize/2;
 
             Complex[] fftResult = fftResultRaw[centerID..];
         
@@ -124,12 +132,9 @@ public class EMGSpectrogram : MonoBehaviour
     double[] GetEMGDatas()
     {
         Queue<int> _emgDatas = new Queue<int>(emgSo.emgDatas[this.emgType]);
-        double[] emgDatas = new double[_emgDatas.Count];
-        for (int i = 0; i < emgDatas.Length; i++)
-        {
-            emgDatas[i] = _emgDatas.Dequeue();
-        }
-
+        double[] emgDatas = new double[windowSize];
+        Array.Copy(_emgDatas.ToArray(), emgDatas.Length - windowSize,
+            emgDatas,0,windowSize);
         return emgDatas;
     }
 }
