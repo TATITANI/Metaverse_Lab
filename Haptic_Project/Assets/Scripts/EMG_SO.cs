@@ -16,8 +16,9 @@ public class EMG_SO : ScriptableObject
 
     public Dictionary<EMGType, Queue<int>> emgDatas { get; private set; }
         = new Dictionary<EMGType, Queue<int>>();
-
-    public int capacity { get; private set; } = 16;
+    
+    [SerializeField] int capacity = 64;
+    public int Capacity { get; private set; } = 64;
     private UnityEvent<EMGType, int> OnChangedEvent = new UnityEvent<EMGType, int>();
     [SerializeField] private int maxPeak = 300;
     private int PreviousMaxEMG=0;
