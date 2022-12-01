@@ -80,7 +80,6 @@ public class UImanager : MonoBehaviour
     [SerializeField] private List<GaugeUI> listPressureUI;
     [SerializeField] private HandControllerSO controllerSO;
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -146,6 +145,8 @@ public class UImanager : MonoBehaviour
         Contents_timeActive = !Contents_timeActive;
         Contents_startPauseText.text = Contents_timeActive ? "PAUSE" : "START";
         EMG_Contents_Active = !EMG_Contents_Active;
+        CSVSaver.Instance.SetSaveOn(Contents_timeActive);
+
     }
 
     public void Task_StartPauseBtn()
@@ -188,6 +189,7 @@ public class UImanager : MonoBehaviour
                     {
                         EMG_Count_Grab_Contents++;
                     }
+                    
                     break;
                 
                 case EMG_SO.EMGType.PICK:
