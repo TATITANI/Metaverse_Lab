@@ -93,8 +93,8 @@ void SendData() {
       String str_envlope = String(envlope);
       String str_envlope_1 = String(envlope_1);
 
-      //sendData = "0, "+str_envlope + ',' + str_envlope_1+", 4000";  //테스트용
-      sendData = "#, "+str_envlope + ',' + 0;    //유니티용
+      sendData = "0, "+str_envlope + ',' + str_envlope_1+", 4000";  //테스트용
+      //sendData = "#, "+str_envlope + ',' + str_envlope_1;    //유니티용
 
       char* a = new char[sendData.length() + 1];
       strcpy(a, sendData.c_str());

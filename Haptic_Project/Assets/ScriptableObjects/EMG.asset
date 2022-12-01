@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: EMG
   m_EditorClassIdentifier: 
   capacity: 64
-  maxPeak: 2000
+  maxPeak: 20000

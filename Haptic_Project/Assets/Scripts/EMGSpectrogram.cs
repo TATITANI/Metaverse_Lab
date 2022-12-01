@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,7 +77,8 @@ public class EMGSpectrogram : MonoBehaviour
         while (true)
         {
             UpdateData();
-            yield return new WaitForSeconds(samplingTime * windowSize*0.25f);
+            //중첩 25%
+            yield return new WaitForSeconds(samplingTime * windowSize*0.75f);
         }
     }
     void UpdateData()

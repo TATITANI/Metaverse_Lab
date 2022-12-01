@@ -42,8 +42,8 @@ public class SpectrogramItem : MonoBehaviour
         for (int i = 0; i < datas.Length; i++)
         {
             float dBMagnitude = 10 * Mathf.Log10((float)datas[i].Magnitude);
-            //100db 최대
-            float normalizedMag = (dBMagnitude) * 0.01f * maxHue; // 0~1
+            //50db 최대
+            float normalizedMag = (dBMagnitude) * 0.02f * maxHue; // 0~1
             float h = Mathf.Clamp(maxHue- normalizedMag, 0, maxHue); // amplitude 낮을수록 파랑
             // 아래부터 저주파
             imgBlocks[datas.Length-1-i].color = Color.HSVToRGB(h,1,1);
