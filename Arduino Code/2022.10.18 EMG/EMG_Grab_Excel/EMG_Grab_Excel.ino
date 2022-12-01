@@ -96,7 +96,7 @@ void setup() {
     // micros will overflow and auto return to zero every 70 minutes
 
     Serial.println("CLEARDATA");
-    Serial.println("LABEL,Time,Timer, EMG_Grab,EMG_Pick,Avg_Grab,Max_Grab,Avg_Pick,Max_Pick,Count");//, Counting,timeMillis
+    Serial.println("LABEL,Time,Timer, EMG_GrabAvg_Grab,Max_GrabCount");//, Counting,timeMillis
     
     timeMillis=0;
     startMillis = millis();
@@ -143,9 +143,6 @@ void loop() {
           Serial.print(envlope_Grab);
           Serial.print(", ");
 
-          Serial.print(envlope_Pick);
-          Serial.print(", ");
-          
           //Serial.print(millis()*0.001);
 
           Serial.print(avg_Grab);
@@ -153,13 +150,6 @@ void loop() {
           
           Serial.print(maxEMG_Grab);
           Serial.print(",");
-          
-          Serial.print(avg_Pick);
-          Serial.print(",");
-          
-          Serial.print(maxEMG_Pick);
-          Serial.print(",");
-
           Serial.print(CountCheck);
           Serial.println(",");
           //Serial.print("count : ");
@@ -168,12 +158,7 @@ void loop() {
           if(maxEMG_Grab<envlope_Grab){
             maxEMG_Grab=envlope_Grab; //최대값 maxEMG
           }
-          if(maxEMG_Pick<envlope_Pick){
-            maxEMG_Pick=envlope_Pick; //최대값 maxEMG
-          }
-          count++;
           sum_Grab = sum_Grab + envlope_Grab;
-          sum_Pick = sum_Pick + envlope_Pick;
           
           delay(20); //excel 
         }
@@ -190,7 +175,6 @@ void loop() {
          timeMillis++; //0.1초 증가
          
          avg_Grab = sum_Grab/count;
-         avg_Pick = sum_Pick/count;
         //  Serial.print("sum_Grab : ");
         //  Serial.println(sum_Grab);
         //  Serial.print("avg_Grab : ");
@@ -198,9 +182,7 @@ void loop() {
         //  Serial.print("maxEMG_Grab : ");
         //  Serial.println(maxEMG_Grab);
          count = 1;
-         sum_Pick=0;
          sum_Grab=0;
-         maxEMG_Pick=0;
          maxEMG_Grab=0;
       }
      

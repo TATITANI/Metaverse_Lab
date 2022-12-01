@@ -291,13 +291,13 @@ void RecvData() {
   Serial.flush();
 }
 
-unsigned long loopLastMicroTime = 0;
+unsigned long loopLastMilliTime = 0;
 
 void loop() {
-  if (micros() - loopLastMicroTime < 20) {
+  if (micros() - loopLastMilliTime < 20) {
     return;
   }
-  loopLastMicroTime = micros();
+  loopLastMilliTime = micros();
 
   if (!isInit) {
     Init();

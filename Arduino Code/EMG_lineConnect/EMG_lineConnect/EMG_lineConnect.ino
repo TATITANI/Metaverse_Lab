@@ -50,7 +50,7 @@ String sendData, recvData;
 
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   myFilter.init(sampleRate, humFreq, true, true, true);
   // setup for time cost measure
