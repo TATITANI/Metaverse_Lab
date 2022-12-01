@@ -294,20 +294,21 @@ void RecvData() {
 unsigned long loopLastMilliTime = 0;
 
 void loop() {
-  if (micros() - loopLastMilliTime < 20) {
-    return;
-  }
-  loopLastMilliTime = micros();
-
+  
   if (!isInit) {
     Init();
     isInit = true;
   }
 
+  if (millis() - loopLastMilliTime>  20) {
+
   //InputTest();
   RecvData();
   MotorControl();
   SendData();
+
+  loopLastMilliTime = millis();
+  }
 }
 //서보 : 가변저항 : <180,180,180> : 600 450 477
 //서보 : 가변저항 : <0,0,0> :  1013  1000 1023
