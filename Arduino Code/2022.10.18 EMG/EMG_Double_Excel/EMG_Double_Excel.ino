@@ -174,8 +174,9 @@ void loop() {
           count++;
           sum_Grab = sum_Grab + envlope_Grab;
           sum_Pick = sum_Pick + envlope_Pick;
-          
-          delay(20); //excel 
+          avg_Grab = sum_Grab/count;
+          avg_Pick = sum_Pick/count;
+          delay(100); //excel //20 - 1/ 0.02
         }
         
         // Serial.print("Filters cost time: "); Serial.println(timeStamp);
@@ -189,8 +190,7 @@ void loop() {
          previousMillis = currentMillis;
          timeMillis++; //0.1초 증가
          
-         avg_Grab = sum_Grab/count;
-         avg_Pick = sum_Pick/count;
+         
         //  Serial.print("sum_Grab : ");
         //  Serial.println(sum_Grab);
         //  Serial.print("avg_Grab : ");
@@ -211,4 +211,3 @@ void loop() {
     // if more than timeBudget, the sample rate need to reduce to
     // SAMPLE_FREQ_500HZ
 }
-
