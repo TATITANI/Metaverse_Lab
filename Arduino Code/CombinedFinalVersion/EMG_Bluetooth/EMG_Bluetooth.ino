@@ -305,7 +305,7 @@ void loop() {
   //InputTest();
   RecvData();
   MotorControl();
-  SendData();
+  //SendData();
 
   loopLastMilliTime = millis();
   }
