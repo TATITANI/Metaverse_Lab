@@ -73,9 +73,9 @@ public class HandController : MonoBehaviour
             {
                 data.SetFingerPressure(fingerID, 0);
             }
-
-            Debug.DrawLine(rayStartPos, rayStartPos + pressCheckingDistance * dir, Color.red);
-            Debug.DrawLine(rayStartPos, rayStartPos + pressCheckingDistance * touchRange * dir, Color.blue);
+                
+            // Debug.DrawLine(rayStartPos, rayStartPos + pressCheckingDistance * dir, Color.red);
+            // Debug.DrawLine(rayStartPos, rayStartPos + pressCheckingDistance * touchRange * dir, Color.blue);
         }
     }
 }
