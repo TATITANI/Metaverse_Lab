@@ -60,7 +60,8 @@ public class SerialCommunicator : MonoBehaviour
             sendThread = new Thread(SendThread);
             sendThread.Start();
 
-            recvThread = new Thread(ReadMessage);
+            // recvThread = new Thread(ReadMessage);
+            recvThread = new Thread(PushDatas_Test);
             recvThread.Start();
         }
 
@@ -225,6 +226,9 @@ public class SerialCommunicator : MonoBehaviour
 
     void DecryptMessage(string message)
     {
+        //임시
+        return;
+
         string[] emgDatas = message.Split(',');
         //Vector3 inputVector = new Vector3(-float.Parse(s[2]), float.Parse(s[0]), float.Parse(s[1]));
         int grabEmg = Convert.ToInt32(emgDatas[1]);
